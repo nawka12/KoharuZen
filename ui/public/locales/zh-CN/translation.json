@@ -3,7 +3,11 @@
     "initializing": "初始化中...",
     "cancel": "取消",
     "save": "保存",
-    "saved": "已保存！"
+    "saved": "已保存！",
+    "copy": "复制",
+    "copied": "已复制",
+    "confirm": "确认",
+    "open": "打开"
   },
   "menu": {
     "file": "文件",
@@ -37,7 +41,20 @@
     "version": "版本：{{version}}",
     "versionUnknown": "版本：未知",
     "language": "语言",
-    "processSelected": "Process {{count}} pages"
+    "processSelected": "处理 {{count}} 页",
+    "languages": {
+      "pt-BR": "Português brasileiro",
+      "ko-KR": "한국어",
+      "es-ES": "Español",
+      "ja-JP": "日本語",
+      "zh-TW": "繁體中文",
+      "zh-CN": "简体中文",
+      "en-US": "English",
+      "ru-RU": "Русский",
+      "tr-TR": "Türkçe"
+    },
+    "open": "打开",
+    "exportGroup": "导出"
   },
   "welcome": {
     "title": "Koharu",
@@ -79,17 +96,18 @@
       "title": "页面管理",
       "description": "拖放页面以重新排列顺序。"
     },
-    "processPage": "Process page",
-    "processSelected": "Process {{count}} pages",
-    "deletePage": "Delete page",
-    "deleteSelected": "Delete {{count}} pages",
-    "nSelected": "{{count}} selected"
+    "processPage": "处理页面",
+    "processSelected": "处理 {{count}} 页",
+    "deletePage": "删除页面",
+    "deleteSelected": "删除 {{count}} 页",
+    "nSelected": "已选 {{count}} 页"
   },
   "panels": {
     "processing": "处理",
     "mask": "遮罩",
     "llm": "LLM",
-    "render": "渲染"
+    "render": "渲染",
+    "ai": "AI"
   },
   "layers": {
     "title": "图层",
@@ -103,7 +121,7 @@
   "processing": {
     "detect": "检测",
     "detectTooltip": "对当前页面运行文本检测",
-    "ocr": "识别",
+    "ocr": "OCR",
     "ocrTooltip": "识别已检测区域中的文本",
     "render": "渲染"
   },
@@ -221,8 +239,8 @@
   "workspace": {
     "importPrompt": "导入页面以开始编辑。",
     "deleteBlock": "删除块",
-    "dropImagesTitle": "Drop images to add pages",
-    "dropImagesHint": "PNG, JPG, or WebP"
+    "dropImagesTitle": "拖放图片以添加页面",
+    "dropImagesHint": "PNG、JPG 或 WebP"
   },
   "statusBar": {
     "zoom": "缩放",
@@ -316,7 +334,7 @@
     "localLlmPresetPreset1": "预设 1",
     "localLlmPresetPreset2": "预设 2",
     "localLlmPresetCustom": "自定义",
-    "localLlmBaseUrl": "Base URL",
+    "localLlmBaseUrl": "基础 URL",
     "localLlmApiKey": "API 密钥（可选）",
     "localLlmModelName": "模型名称",
     "localLlmModelNamePlaceholder": "例如 qwen2.5:7b、llama3.2:3b",
@@ -364,12 +382,12 @@
     "engines": "引擎",
     "enginesDescription": "为每个流水线阶段选择要使用的ML引擎。",
     "detector": "检测器",
-    "fontDetector": "Font Detector",
+    "fontDetector": "字体检测器",
     "segmenter": "分割器",
     "bubbleSegmenter": "对话框分割器",
     "ocr": "OCR",
     "translator": "翻译器",
-    "inpainter": "修补器",
+    "inpainter": "修复器",
     "renderer": "渲染器",
     "keybinds": "快捷键",
     "keybindsDescription": "自定义工具和操作的快捷键。",
@@ -380,15 +398,19 @@
     "shortcutResetDescription": "这将恢复所有快捷键到默认值。您保存的更改将丢失。",
     "shortcutConflict": "此按键组合已在使用中",
     "shortcutInvalid": "此按键不能用作快捷键",
-    "experimental": "Experimental",
-    "experimentalDescription": "Experimental features that may change or break. Use with caution.",
-    "experimentalWarningTitle": "⚠ Experimental Features",
-    "experimentalWarningBody": "These features are experimental and may be unstable. They may change, break, or be removed in future updates.",
-    "experimentalContextLabel": "Previous page translation context",
-    "experimentalContextDescription": "Include previous page translations as context when translating the current page. This can improve consistency across pages.",
-    "experimentalContextOff": "Off",
-    "experimentalContext1Page": "1 previous page",
-    "experimentalContextAll": "All previous pages"
+    "experimental": "实验性功能",
+    "experimentalDescription": "实验性功能可能会更改或失效，请谨慎使用。",
+    "experimentalWarningTitle": "⚠ 实验性功能",
+    "experimentalWarningBody": "这些是实验性功能，可能不稳定。它们可能在未来的更新中更改、失效或移除。",
+    "experimentalContextLabel": "先前页面翻译上下文",
+    "experimentalContextDescription": "翻译当前页面时包含先前页面的翻译作为上下文，可提高跨页翻译的一致性。",
+    "experimentalContextOff": "关闭",
+    "experimentalContext1Page": "前 1 页",
+    "experimentalContextAll": "所有先前页面",
+    "codex": "Codex",
+    "codexDescription": "使用 ChatGPT Codex 账户登录以进行图像生成。",
+    "ai": "AI",
+    "codexTwoFactorDescription": "在此登录前，请在你的 ChatGPT 账户上启用双重认证。Codex 设备码登录需要 2FA 才能成功完成。"
   },
   "updater": {
     "available": {
@@ -408,5 +430,21 @@
     },
     "close": "关闭",
     "retry": "重试"
+  },
+  "ai": {
+    "openBrowser": "打开浏览器",
+    "signInTitle": "登录 Codex",
+    "noPage": "请先选择页面。",
+    "signInPending": "等待授权",
+    "signedIn": "已登录",
+    "userCode": "验证码",
+    "signInComplete": "已登录",
+    "signIn": "登录",
+    "signedOut": "已登出",
+    "signOut": "登出",
+    "signInFailed": "登录失败",
+    "prompt": "提示词",
+    "generate": "生成图像",
+    "model": "模型"
   }
 }

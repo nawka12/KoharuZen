@@ -3,7 +3,11 @@
     "initializing": "Başlatılıyor...",
     "cancel": "İptal",
     "save": "Kaydet",
-    "saved": "Kaydedildi!"
+    "saved": "Kaydedildi!",
+    "copy": "Kopyala",
+    "copied": "Kopyalandı",
+    "confirm": "Onayla",
+    "open": "Aç"
   },
   "menu": {
     "file": "Dosya",
@@ -37,7 +41,20 @@
     "version": "Sürüm: {{version}}",
     "versionUnknown": "Sürüm: Bilinmiyor",
     "language": "Dil",
-    "processSelected": "Process {{count}} pages"
+    "processSelected": "{{count}} sayfa işlensin",
+    "languages": {
+      "pt-BR": "Português brasileiro",
+      "ko-KR": "한국어",
+      "es-ES": "Español",
+      "ja-JP": "日本語",
+      "zh-TW": "繁體中文",
+      "zh-CN": "简体中文",
+      "en-US": "English",
+      "ru-RU": "Русский",
+      "tr-TR": "Türkçe"
+    },
+    "open": "Aç",
+    "exportGroup": "Dışa aktar"
   },
   "welcome": {
     "title": "Koharu",
@@ -79,17 +96,18 @@
       "title": "Sayfa Yöneticisi",
       "description": "Sayfaları yeniden sıralamak için sürükleyip bırakın."
     },
-    "processPage": "Process page",
-    "processSelected": "Process {{count}} pages",
-    "deletePage": "Delete page",
-    "deleteSelected": "Delete {{count}} pages",
-    "nSelected": "{{count}} selected"
+    "processPage": "Sayfayı işle",
+    "processSelected": "{{count}} sayfayı işle",
+    "deletePage": "Sayfayı sil",
+    "deleteSelected": "{{count}} sayfayı sil",
+    "nSelected": "{{count}} seçildi"
   },
   "panels": {
     "processing": "İşleme",
     "mask": "Maske",
     "llm": "LLM",
-    "render": "Render"
+    "render": "İşleme",
+    "ai": "YZ"
   },
   "layers": {
     "title": "Katmanlar",
@@ -105,7 +123,7 @@
     "detectTooltip": "Geçerli sayfada metin algılamayı çalıştır",
     "ocr": "OCR",
     "ocrTooltip": "Algılanan bölgelerdeki metni tanı",
-    "render": "Render"
+    "render": "İşleme"
   },
   "mask": {
     "showSegmentationMask": "Segmentasyon maskesini göster",
@@ -134,7 +152,7 @@
     "generate": "Üret",
     "generating": "Üretiliyor...",
     "generateTooltip": "Algılanan metin blokları için çeviri üret",
-    "render": "Render",
+    "render": "İşle",
     "renderTooltip": "Çevirileri sayfaya render et",
     "apiKeyMissing": "{{provider}} API anahtarı gerekli.",
     "localModelActive": "Yerel model etkin",
@@ -221,11 +239,11 @@
   "workspace": {
     "importPrompt": "Düzenlemeye başlamak için bir sayfa içe aktarın.",
     "deleteBlock": "Bloğu sil",
-    "dropImagesTitle": "Drop images to add pages",
-    "dropImagesHint": "PNG, JPG, or WebP"
+    "dropImagesTitle": "Sayfa eklemek için görselleri sürükleyin",
+    "dropImagesHint": "PNG, JPG veya WebP"
   },
   "statusBar": {
-    "zoom": "Yakınlaştırma",
+    "zoom": "Yakınlaştır",
     "canvas": "Tuval"
   },
   "toolbar": {
@@ -267,7 +285,7 @@
     "language": "DİL",
     "runtimePath": "RUNTIME YOLU",
     "modelsPath": "MODEL YOLU",
-    "proxyUrl": "PROXY URL",
+    "proxyUrl": "VEKİL SUNUCU URL'Sİ",
     "runtimePathPlaceholder": "RUNTIME YOLU",
     "modelsPathPlaceholder": "MODEL YOLU",
     "proxyUrlPlaceholder": "HTTP://127.0.0.1:7890",
@@ -281,7 +299,7 @@
     "retryNow": "ŞİMDİ TEKRAR DENE"
   },
   "settings": {
-    "httpProxy": "HTTP Proxy",
+    "httpProxy": "HTTP Vekil Sunucu",
     "httpProxyDescription": "Runtime ve model indirmeleri için kullanılır. Değişiklikler otomatik kaydedilir.",
     "title": "Ayarlar",
     "appearance": "Görünüm",
@@ -303,7 +321,7 @@
     "aboutRepository": "Depo",
     "device": "Cihaz",
     "deviceDescription": "Donanım hızlandırma bilgileri.",
-    "deviceMl": "ML Compute",
+    "deviceMl": "ML Hesaplama",
     "apiKeys": "API Anahtarları",
     "apiKeysDescription": "Farklı sağlayıcılar için API anahtarlarınızı yönetin. Anahtarlarınız cihazınızın anahtar zincirinde güvenle saklanır ve asla başka biriyle paylaşılmaz.",
     "freeTier": "Ücretsiz Katman",
@@ -316,7 +334,7 @@
     "localLlmPresetPreset1": "Ön ayar 1",
     "localLlmPresetPreset2": "Ön ayar 2",
     "localLlmPresetCustom": "Özel",
-    "localLlmBaseUrl": "Base URL",
+    "localLlmBaseUrl": "Temel URL",
     "localLlmApiKey": "API Anahtarı (isteğe bağlı)",
     "localLlmModelName": "Model adı",
     "localLlmModelNamePlaceholder": "örn. qwen2.5:7b, llama3.2:3b",
@@ -334,7 +352,7 @@
     "localLlmTestFailed": "Bağlantı başarısız: {{error}}",
     "localLlmAdvanced": "Gelişmiş",
     "appConfig": "Uygulama Yapılandırması",
-    "runtime": "Çalışma Zamanı",
+    "runtime": "Çalışma zamanı",
     "renderingFont": "Render Yazı Tipi",
     "renderingFontDescription": "Çevrilmiş metni görsellere render ederken kullanılan yazı tipi.",
     "providersDescription": "LLM sağlayıcılarının API anahtarlarını ve uç noktalarını yapılandırın.",
@@ -364,12 +382,12 @@
     "engines": "Motorlar",
     "enginesDescription": "Her işlem hattı aşaması için kullanılacak ML motorunu seçin.",
     "detector": "Algılayıcı",
-    "fontDetector": "Font Detector",
+    "fontDetector": "Yazı tipi algılayıcı",
     "segmenter": "Bölümleyici",
     "bubbleSegmenter": "Balon Bölümleyici",
     "ocr": "OCR",
     "translator": "Çevirici",
-    "inpainter": "İnpaint Motoru",
+    "inpainter": "Onarıcı",
     "renderer": "Render Motoru",
     "keybinds": "Tuş Atamaları",
     "keybindsDescription": "Araçlar ve eylemler için klavye kısa yollarını özelleştirin.",
@@ -380,15 +398,19 @@
     "shortcutResetDescription": "Bu, tüm klavye kısayollarını varsayılan değerlerine döndürecektir. Kaydedilen değişiklikleriniz kaybolacaktır.",
     "shortcutConflict": "Tuş kombinasyonu zaten kullanılıyor",
     "shortcutInvalid": "Bu tuş kısayol olarak kullanılamaz",
-    "experimental": "Experimental",
-    "experimentalDescription": "Experimental features that may change or break. Use with caution.",
-    "experimentalWarningTitle": "⚠ Experimental Features",
-    "experimentalWarningBody": "These features are experimental and may be unstable. They may change, break, or be removed in future updates.",
-    "experimentalContextLabel": "Previous page translation context",
-    "experimentalContextDescription": "Include previous page translations as context when translating the current page. This can improve consistency across pages.",
-    "experimentalContextOff": "Off",
-    "experimentalContext1Page": "1 previous page",
-    "experimentalContextAll": "All previous pages"
+    "experimental": "Deneysel",
+    "experimentalDescription": "Deneysel özellikler değişebilir veya bozulabilir. Dikkatli kullanın.",
+    "experimentalWarningTitle": "⚠ Deneysel Özellikler",
+    "experimentalWarningBody": "Bu özellikler deneyseldir ve kararsız olabilir. Gelecek güncellemelerde değişebilir, bozulabilir veya kaldırılabilir.",
+    "experimentalContextLabel": "Önceki sayfa çeviri bağlamı",
+    "experimentalContextDescription": "Geçerli sayfayı çevirirken önceki sayfa çevirilerini bağlam olarak ekleyin. Bu, sayfalar arasında tutarlılığı artırabilir.",
+    "experimentalContextOff": "Kapalı",
+    "experimentalContext1Page": "1 önceki sayfa",
+    "experimentalContextAll": "Tüm önceki sayfalar",
+    "codex": "Codex",
+    "codexDescription": "Görsel oluşturmak için ChatGPT Codex hesabınızla oturum açın.",
+    "ai": "YZ",
+    "codexTwoFactorDescription": "Burada oturum açmadan önce ChatGPT hesabınızda iki faktörlü kimlik doğrulamayı etkinleştirin. Codex cihaz kodu girişi, başarıyla tamamlanması için 2FA gerektirir."
   },
   "updater": {
     "available": {
@@ -408,5 +430,21 @@
     },
     "close": "Kapat",
     "retry": "Tekrar dene"
+  },
+  "ai": {
+    "openBrowser": "Tarayıcıyı aç",
+    "signInTitle": "Codex'e oturum aç",
+    "noPage": "Önce bir sayfa seçin.",
+    "signInPending": "Yetkilendirme bekleniyor",
+    "signedIn": "Oturum açıldı",
+    "userCode": "Kod",
+    "signInComplete": "Oturum açıldı",
+    "signIn": "Oturum aç",
+    "signedOut": "Oturum kapatıldı",
+    "signOut": "Oturumu kapat",
+    "signInFailed": "Oturum açma başarısız",
+    "prompt": "İstem",
+    "generate": "Görsel oluştur",
+    "model": "Model"
   }
 }

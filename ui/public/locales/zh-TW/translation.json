@@ -3,7 +3,11 @@
     "initializing": "初始化中...",
     "cancel": "取消",
     "save": "儲存",
-    "saved": "已儲存！"
+    "saved": "已儲存！",
+    "copy": "複製",
+    "copied": "已複製",
+    "confirm": "確認",
+    "open": "開啟"
   },
   "menu": {
     "file": "檔案",
@@ -37,7 +41,20 @@
     "version": "版本：{{version}}",
     "versionUnknown": "版本：未知",
     "language": "語言",
-    "processSelected": "Process {{count}} pages"
+    "processSelected": "處理 {{count}} 頁",
+    "languages": {
+      "pt-BR": "Português brasileiro",
+      "ko-KR": "한국어",
+      "es-ES": "Español",
+      "ja-JP": "日本語",
+      "zh-TW": "繁體中文",
+      "zh-CN": "简体中文",
+      "en-US": "English",
+      "ru-RU": "Русский",
+      "tr-TR": "Türkçe"
+    },
+    "open": "開啟",
+    "exportGroup": "匯出"
   },
   "welcome": {
     "title": "Koharu",
@@ -79,17 +96,18 @@
       "title": "頁面管理",
       "description": "拖放頁面以重新排列順序。"
     },
-    "processPage": "Process page",
-    "processSelected": "Process {{count}} pages",
-    "deletePage": "Delete page",
-    "deleteSelected": "Delete {{count}} pages",
-    "nSelected": "{{count}} selected"
+    "processPage": "處理頁面",
+    "processSelected": "處理 {{count}} 頁",
+    "deletePage": "刪除頁面",
+    "deleteSelected": "刪除 {{count}} 頁",
+    "nSelected": "已選 {{count}} 頁"
   },
   "panels": {
     "processing": "處理",
     "mask": "遮罩",
     "llm": "LLM",
-    "render": "渲染"
+    "render": "渲染",
+    "ai": "AI"
   },
   "layers": {
     "title": "圖層",
@@ -103,7 +121,7 @@
   "processing": {
     "detect": "偵測",
     "detectTooltip": "在目前頁面執行文字偵測",
-    "ocr": "辨識",
+    "ocr": "OCR",
     "ocrTooltip": "辨識已偵測區域中的文字",
     "render": "渲染"
   },
@@ -221,8 +239,8 @@
   "workspace": {
     "importPrompt": "匯入頁面以開始編輯。",
     "deleteBlock": "刪除區塊",
-    "dropImagesTitle": "Drop images to add pages",
-    "dropImagesHint": "PNG, JPG, or WebP"
+    "dropImagesTitle": "拖放圖片以新增頁面",
+    "dropImagesHint": "PNG、JPG 或 WebP"
   },
   "statusBar": {
     "zoom": "縮放",
@@ -303,7 +321,7 @@
     "aboutRepository": "原始碼",
     "device": "裝置",
     "deviceDescription": "硬體加速資訊",
-    "deviceMl": "ML 運算",
+    "deviceMl": "ML 計算",
     "apiKeys": "API 密鑰",
     "apiKeysDescription": "管理您在不同提供商的 API 密鑰。您的密鑰會安全地存儲在設備的密鑰鏈中，絕不會與他人共享。",
     "freeTier": "免費等級",
@@ -316,7 +334,7 @@
     "localLlmPresetPreset1": "預設 1",
     "localLlmPresetPreset2": "預設 2",
     "localLlmPresetCustom": "自訂",
-    "localLlmBaseUrl": "Base URL",
+    "localLlmBaseUrl": "基礎 URL",
     "localLlmApiKey": "API 密鑰（選填）",
     "localLlmModelName": "模型名稱",
     "localLlmModelNamePlaceholder": "例如 qwen2.5:7b、llama3.2:3b",
@@ -334,7 +352,7 @@
     "localLlmTestFailed": "連線失敗：{{error}}",
     "localLlmAdvanced": "進階設定",
     "appConfig": "應用程式設定",
-    "runtime": "執行階段",
+    "runtime": "執行時期",
     "renderingFont": "渲染字型",
     "renderingFontDescription": "將翻譯文字渲染至影像時使用的字型。",
     "providersDescription": "設定 LLM 提供者的 API 金鑰與端點。",
@@ -364,12 +382,12 @@
     "engines": "引擎",
     "enginesDescription": "為每個流水線階段選擇要使用的ML引擎。",
     "detector": "偵測器",
-    "fontDetector": "Font Detector",
+    "fontDetector": "字型偵測器",
     "segmenter": "分割器",
     "bubbleSegmenter": "對話框分割器",
     "ocr": "OCR",
     "translator": "翻譯器",
-    "inpainter": "修補器",
+    "inpainter": "修復器",
     "renderer": "渲染器",
     "keybinds": "快捷鍵",
     "keybindsDescription": "自定義工具和操作的快捷鍵。",
@@ -380,15 +398,19 @@
     "shortcutResetDescription": "這將恢復所有快捷鍵到默認值。您保存的更改將丟失。",
     "shortcutConflict": "按鍵組合已被使用",
     "shortcutInvalid": "此按鍵不能用作快捷鍵",
-    "experimental": "Experimental",
-    "experimentalDescription": "Experimental features that may change or break. Use with caution.",
-    "experimentalWarningTitle": "⚠ Experimental Features",
-    "experimentalWarningBody": "These features are experimental and may be unstable. They may change, break, or be removed in future updates.",
-    "experimentalContextLabel": "Previous page translation context",
-    "experimentalContextDescription": "Include previous page translations as context when translating the current page. This can improve consistency across pages.",
-    "experimentalContextOff": "Off",
-    "experimentalContext1Page": "1 previous page",
-    "experimentalContextAll": "All previous pages"
+    "experimental": "實驗性功能",
+    "experimentalDescription": "實驗性功能可能會變更或失效，請謹慎使用。",
+    "experimentalWarningTitle": "⚠ 實驗性功能",
+    "experimentalWarningBody": "這些是實驗性功能，可能不穩定。它們可能在未來的更新中變更、失效或移除。",
+    "experimentalContextLabel": "先前頁面翻譯上下文",
+    "experimentalContextDescription": "翻譯目前頁面時包含先前頁面的翻譯作為上下文，可提高跨頁翻譯的一致性。",
+    "experimentalContextOff": "關閉",
+    "experimentalContext1Page": "前 1 頁",
+    "experimentalContextAll": "所有先前頁面",
+    "codex": "Codex",
+    "codexDescription": "使用 ChatGPT Codex 帳戶登入以進行圖像生成。",
+    "ai": "AI",
+    "codexTwoFactorDescription": "在此登入前，請在你的 ChatGPT 帳戶上啟用雙重認證。Codex 裝置碼登入需要 2FA 才能成功完成。"
   },
   "updater": {
     "available": {
@@ -408,5 +430,21 @@
     },
     "close": "關閉",
     "retry": "重試"
+  },
+  "ai": {
+    "openBrowser": "開啟瀏覽器",
+    "signInTitle": "登入 Codex",
+    "noPage": "請先選擇頁面。",
+    "signInPending": "等待授權",
+    "signedIn": "已登入",
+    "userCode": "驗證碼",
+    "signInComplete": "已登入",
+    "signIn": "登入",
+    "signedOut": "已登出",
+    "signOut": "登出",
+    "signInFailed": "登入失敗",
+    "prompt": "提示詞",
+    "generate": "生成圖像",
+    "model": "模型"
   }
 }

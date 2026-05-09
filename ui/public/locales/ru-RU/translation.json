@@ -3,7 +3,11 @@
     "initializing": "Инициализация...",
     "cancel": "Отмена",
     "save": "Сохранить",
-    "saved": "Сохранено!"
+    "saved": "Сохранено!",
+    "copy": "Копировать",
+    "copied": "Скопировано",
+    "confirm": "Подтвердить",
+    "open": "Открыть"
   },
   "menu": {
     "file": "Файл",
@@ -37,7 +41,20 @@
     "version": "Версия: {{version}}",
     "versionUnknown": "Версия: Неизвестно",
     "language": "Язык",
-    "processSelected": "Process {{count}} pages"
+    "processSelected": "Обработать {{count}} стр.",
+    "languages": {
+      "pt-BR": "Português brasileiro",
+      "ko-KR": "한국어",
+      "es-ES": "Español",
+      "ja-JP": "日本語",
+      "zh-TW": "繁體中文",
+      "zh-CN": "简体中文",
+      "en-US": "English",
+      "ru-RU": "Русский",
+      "tr-TR": "Türkçe"
+    },
+    "open": "Открыть",
+    "exportGroup": "Экспорт"
   },
   "welcome": {
     "title": "Koharu",
@@ -79,17 +96,18 @@
       "title": "Управление страницами",
       "description": "Перетащите страницы для изменения порядка."
     },
-    "processPage": "Process page",
-    "processSelected": "Process {{count}} pages",
-    "deletePage": "Delete page",
-    "deleteSelected": "Delete {{count}} pages",
-    "nSelected": "{{count}} selected"
+    "processPage": "Обработать страницу",
+    "processSelected": "Обработать {{count}} стр.",
+    "deletePage": "Удалить страницу",
+    "deleteSelected": "Удалить {{count}} стр.",
+    "nSelected": "{{count}} выбрано"
   },
   "panels": {
     "processing": "Обработка",
     "mask": "Маска",
     "llm": "LLM",
-    "render": "Рендер"
+    "render": "Рендер",
+    "ai": "ИИ"
   },
   "layers": {
     "title": "Слои",
@@ -134,7 +152,7 @@
     "generate": "Генерировать",
     "generating": "Генерация...",
     "generateTooltip": "Сгенерировать перевод для обнаруженных текстовых блоков",
-    "render": "Рендер",
+    "render": "Рендеринг",
     "renderTooltip": "Отрендерить перевод на странице",
     "apiKeyMissing": "Требуется API-ключ для {{provider}}.",
     "localModelActive": "Локальная модель активна",
@@ -214,15 +232,15 @@
     "ocrLabel": "Текст OCR",
     "ocrBadge": "OCR",
     "translationLabel": "Перевод",
-    "translationBadge": "Пер.",
+    "translationBadge": "TL",
     "addOcrPlaceholder": "Добавить текст OCR",
     "addTranslationPlaceholder": "Добавить перевод"
   },
   "workspace": {
     "importPrompt": "Импортируйте страницу, чтобы начать редактирование.",
     "deleteBlock": "Удалить блок",
-    "dropImagesTitle": "Drop images to add pages",
-    "dropImagesHint": "PNG, JPG, or WebP"
+    "dropImagesTitle": "Перетащите изображения для добавления страниц",
+    "dropImagesHint": "PNG, JPG или WebP"
   },
   "statusBar": {
     "zoom": "Масштаб",
@@ -303,7 +321,7 @@
     "aboutRepository": "Репозиторий",
     "device": "Устройство",
     "deviceDescription": "Информация об аппаратном ускорении.",
-    "deviceMl": "ML Compute",
+    "deviceMl": "ML-вычисления",
     "apiKeys": "API ключи",
     "apiKeysDescription": "Управляйте своими API ключами для различных провайдеров. Ваши ключи надежно хранятся в связке ключей вашего устройства и никогда не передаются другим лицам.",
     "freeTier": "Бесплатный уровень",
@@ -316,7 +334,7 @@
     "localLlmPresetPreset1": "Пресет 1",
     "localLlmPresetPreset2": "Пресет 2",
     "localLlmPresetCustom": "Другой",
-    "localLlmBaseUrl": "Base URL",
+    "localLlmBaseUrl": "Базовый URL",
     "localLlmApiKey": "API ключ (необязательно)",
     "localLlmModelName": "Имя модели",
     "localLlmModelNamePlaceholder": "напр. qwen2.5:7b, llama3.2:3b",
@@ -364,7 +382,7 @@
     "engines": "Движки",
     "enginesDescription": "Выберите ML-движок для каждого этапа конвейера.",
     "detector": "Детектор",
-    "fontDetector": "Font Detector",
+    "fontDetector": "Детектор шрифтов",
     "segmenter": "Сегментатор",
     "bubbleSegmenter": "Сегментатор пузырей",
     "ocr": "OCR",
@@ -380,15 +398,19 @@
     "shortcutResetDescription": "Это восстановит все сочетания клавиш до их значений по умолчанию. Сохраненные изменения будут потеряны.",
     "shortcutConflict": "Сочетание клавиш уже используется",
     "shortcutInvalid": "Эту клавишу нельзя использовать как горячую",
-    "experimental": "Experimental",
-    "experimentalDescription": "Experimental features that may change or break. Use with caution.",
-    "experimentalWarningTitle": "⚠ Experimental Features",
-    "experimentalWarningBody": "These features are experimental and may be unstable. They may change, break, or be removed in future updates.",
-    "experimentalContextLabel": "Previous page translation context",
-    "experimentalContextDescription": "Include previous page translations as context when translating the current page. This can improve consistency across pages.",
-    "experimentalContextOff": "Off",
-    "experimentalContext1Page": "1 previous page",
-    "experimentalContextAll": "All previous pages"
+    "experimental": "Экспериментально",
+    "experimentalDescription": "Экспериментальные функции могут измениться или сломаться. Используйте с осторожностью.",
+    "experimentalWarningTitle": "⚠ Экспериментальные функции",
+    "experimentalWarningBody": "Эти функции являются экспериментальными и могут быть нестабильными. Они могут измениться, сломаться или быть удалены в будущих обновлениях.",
+    "experimentalContextLabel": "Контекст перевода предыдущей страницы",
+    "experimentalContextDescription": "Включать переводы предыдущих страниц как контекст при переводе текущей страницы. Это может улучшить согласованность между страницами.",
+    "experimentalContextOff": "Выкл.",
+    "experimentalContext1Page": "1 предыдущая стр.",
+    "experimentalContextAll": "Все предыдущие страницы",
+    "codex": "Codex",
+    "codexDescription": "Войдите в свою учетную запись ChatGPT Codex для генерации изображений.",
+    "ai": "ИИ",
+    "codexTwoFactorDescription": "Включите двухфакторную аутентификацию в своей учетной записи ChatGPT перед входом. Вход через код устройства Codex требует 2FA для успешного завершения."
   },
   "updater": {
     "available": {
@@ -408,5 +430,21 @@
     },
     "close": "Закрыть",
     "retry": "Повторить"
+  },
+  "ai": {
+    "openBrowser": "Открыть браузер",
+    "signInTitle": "Войти в Codex",
+    "noPage": "Сначала выберите страницу.",
+    "signInPending": "Ожидание авторизации",
+    "signedIn": "Вошли",
+    "userCode": "Код",
+    "signInComplete": "Вошли",
+    "signIn": "Войти",
+    "signedOut": "Вышли",
+    "signOut": "Выйти",
+    "signInFailed": "Ошибка входа",
+    "prompt": "Промпт",
+    "generate": "Сгенерировать изображение",
+    "model": "Модель"
   }
 }

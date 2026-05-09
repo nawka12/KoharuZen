@@ -3,7 +3,11 @@
     "initializing": "Inicializando...",
     "cancel": "Cancelar",
     "save": "Guardar",
-    "saved": "¡Guardado!"
+    "saved": "¡Guardado!",
+    "copy": "Copiar",
+    "copied": "Copiado",
+    "confirm": "Confirmar",
+    "open": "Abrir"
   },
   "menu": {
     "file": "Archivo",
@@ -37,7 +41,20 @@
     "version": "Versión: {{version}}",
     "versionUnknown": "Versión: Desconocida",
     "language": "Idioma",
-    "processSelected": "Process {{count}} pages"
+    "processSelected": "Procesar {{count}} páginas",
+    "languages": {
+      "pt-BR": "Português brasileiro",
+      "ko-KR": "한국어",
+      "es-ES": "Español",
+      "ja-JP": "日本語",
+      "zh-TW": "繁體中文",
+      "zh-CN": "简体中文",
+      "en-US": "English",
+      "ru-RU": "Русский",
+      "tr-TR": "Türkçe"
+    },
+    "open": "Abrir",
+    "exportGroup": "Exportar"
   },
   "welcome": {
     "title": "Koharu",
@@ -79,17 +96,18 @@
       "title": "Gestor de páginas",
       "description": "Arrastra y suelta las páginas para reordenarlas."
     },
-    "processPage": "Process page",
-    "processSelected": "Process {{count}} pages",
-    "deletePage": "Delete page",
-    "deleteSelected": "Delete {{count}} pages",
-    "nSelected": "{{count}} selected"
+    "processPage": "Procesar página",
+    "processSelected": "Procesar {{count}} páginas",
+    "deletePage": "Eliminar página",
+    "deleteSelected": "Eliminar {{count}} páginas",
+    "nSelected": "{{count}} seleccionadas"
   },
   "panels": {
     "processing": "Procesamiento",
     "mask": "Máscara",
     "llm": "LLM",
-    "render": "Renderizado"
+    "render": "Renderizado",
+    "ai": "IA"
   },
   "layers": {
     "title": "Capas",
@@ -105,7 +123,7 @@
     "detectTooltip": "Ejecutar detección de texto en la página actual",
     "ocr": "OCR",
     "ocrTooltip": "Reconocer texto en las regiones detectadas",
-    "render": "Renderizar"
+    "render": "Renderizado"
   },
   "mask": {
     "showSegmentationMask": "Mostrar máscara de segmentación",
@@ -221,8 +239,8 @@
   "workspace": {
     "importPrompt": "Importa una página para comenzar a editar.",
     "deleteBlock": "Eliminar bloque",
-    "dropImagesTitle": "Drop images to add pages",
-    "dropImagesHint": "PNG, JPG, or WebP"
+    "dropImagesTitle": "Suelta imágenes para añadir páginas",
+    "dropImagesHint": "PNG, JPG o WebP"
   },
   "statusBar": {
     "zoom": "Zoom",
@@ -303,7 +321,7 @@
     "aboutRepository": "Repositorio",
     "device": "Dispositivo",
     "deviceDescription": "Información sobre aceleración por hardware.",
-    "deviceMl": "Cómputo ML",
+    "deviceMl": "ML Compute",
     "apiKeys": "Claves API",
     "apiKeysDescription": "Gestiona tus claves API para diferentes proveedores. Tus claves se almacenan de forma segura en el llavero de tu dispositivo y nunca se comparten con nadie.",
     "freeTier": "Nivel gratuito",
@@ -316,7 +334,7 @@
     "localLlmPresetPreset1": "Preajuste 1",
     "localLlmPresetPreset2": "Preajuste 2",
     "localLlmPresetCustom": "Personalizado",
-    "localLlmBaseUrl": "Base URL",
+    "localLlmBaseUrl": "URL base",
     "localLlmApiKey": "Clave API (opcional)",
     "localLlmModelName": "Nombre del modelo",
     "localLlmModelNamePlaceholder": "p. ej. qwen2.5:7b, llama3.2:3b",
@@ -334,7 +352,7 @@
     "localLlmTestFailed": "Error de conexión: {{error}}",
     "localLlmAdvanced": "Avanzado",
     "appConfig": "Configuración de la app",
-    "runtime": "Runtime",
+    "runtime": "Tiempo de ejecución",
     "renderingFont": "Fuente de renderizado",
     "renderingFontDescription": "Fuente utilizada al renderizar el texto traducido sobre las imágenes.",
     "providersDescription": "Configura las claves API y los endpoints de los proveedores de LLM.",
@@ -364,7 +382,7 @@
     "engines": "Motores",
     "enginesDescription": "Selecciona qué motor ML usar para cada etapa del pipeline.",
     "detector": "Detector",
-    "fontDetector": "Font Detector",
+    "fontDetector": "Detector de fuentes",
     "segmenter": "Segmentador",
     "bubbleSegmenter": "Segmentador de globos",
     "ocr": "OCR",
@@ -381,14 +399,18 @@
     "shortcutConflict": "Combinación de teclas en uso",
     "shortcutInvalid": "Esta tecla no se puede usar como atajo",
     "experimental": "Experimental",
-    "experimentalDescription": "Experimental features that may change or break. Use with caution.",
-    "experimentalWarningTitle": "⚠ Experimental Features",
-    "experimentalWarningBody": "These features are experimental and may be unstable. They may change, break, or be removed in future updates.",
-    "experimentalContextLabel": "Previous page translation context",
-    "experimentalContextDescription": "Include previous page translations as context when translating the current page. This can improve consistency across pages.",
-    "experimentalContextOff": "Off",
-    "experimentalContext1Page": "1 previous page",
-    "experimentalContextAll": "All previous pages"
+    "experimentalDescription": "Funciones experimentales que pueden cambiar o romperse. Úsalo con precaución.",
+    "experimentalWarningTitle": "⚠ Funciones Experimentales",
+    "experimentalWarningBody": "Estas funciones son experimentales y pueden ser inestables. Pueden cambiar, romperse o eliminarse en futuras actualizaciones.",
+    "experimentalContextLabel": "Contexto de traducción de página anterior",
+    "experimentalContextDescription": "Incluye traducciones de páginas anteriores como contexto al traducir la página actual. Esto puede mejorar la consistencia entre páginas.",
+    "experimentalContextOff": "Desactivado",
+    "experimentalContext1Page": "1 página anterior",
+    "experimentalContextAll": "Todas las páginas anteriores",
+    "codex": "Codex",
+    "codexDescription": "Inicia sesión con tu cuenta de ChatGPT Codex para generar imágenes.",
+    "ai": "IA",
+    "codexTwoFactorDescription": "Activa la autenticación de dos factores en tu cuenta de ChatGPT antes de iniciar sesión aquí. El inicio de sesión con código de dispositivo de Codex requiere 2FA para completarse correctamente."
   },
   "updater": {
     "available": {
@@ -408,5 +430,21 @@
     },
     "close": "Cerrar",
     "retry": "Reintentar"
+  },
+  "ai": {
+    "openBrowser": "Abrir navegador",
+    "signInTitle": "Iniciar sesión en Codex",
+    "noPage": "Selecciona una página primero.",
+    "signInPending": "Esperando autorización",
+    "signedIn": "Sesión iniciada",
+    "userCode": "Código",
+    "signInComplete": "Sesión iniciada",
+    "signIn": "Iniciar sesión",
+    "signedOut": "Sesión cerrada",
+    "signOut": "Cerrar sesión",
+    "signInFailed": "Inicio de sesión fallido",
+    "prompt": "Indicación",
+    "generate": "Generar imagen",
+    "model": "Modelo"
   }
 }

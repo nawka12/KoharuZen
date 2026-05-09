@@ -3,7 +3,11 @@
     "initializing": "初期化中...",
     "cancel": "キャンセル",
     "save": "保存",
-    "saved": "保存しました！"
+    "saved": "保存しました！",
+    "copy": "コピー",
+    "copied": "コピー済み",
+    "confirm": "確認",
+    "open": "開く"
   },
   "menu": {
     "file": "ファイル",
@@ -37,7 +41,20 @@
     "version": "バージョン: {{version}}",
     "versionUnknown": "バージョン: 不明",
     "language": "言語",
-    "processSelected": "Process {{count}} pages"
+    "processSelected": "{{count}} ページを処理",
+    "languages": {
+      "pt-BR": "Português brasileiro",
+      "ko-KR": "한국어",
+      "es-ES": "Español",
+      "ja-JP": "日本語",
+      "zh-TW": "繁體中文",
+      "zh-CN": "简体中文",
+      "en-US": "English",
+      "ru-RU": "Русский",
+      "tr-TR": "Türkçe"
+    },
+    "open": "開く",
+    "exportGroup": "エクスポート"
   },
   "welcome": {
     "title": "Koharu",
@@ -79,17 +96,18 @@
       "title": "ページ管理",
       "description": "ドラッグ＆ドロップでページの順番を変更します。"
     },
-    "processPage": "Process page",
-    "processSelected": "Process {{count}} pages",
-    "deletePage": "Delete page",
-    "deleteSelected": "Delete {{count}} pages",
-    "nSelected": "{{count}} selected"
+    "processPage": "ページを処理",
+    "processSelected": "{{count}} ページを処理",
+    "deletePage": "ページを削除",
+    "deleteSelected": "{{count}} ページを削除",
+    "nSelected": "{{count}} 選択中"
   },
   "panels": {
     "processing": "処理",
     "mask": "マスク",
     "llm": "LLM",
-    "render": "レンダー"
+    "render": "レンダー",
+    "ai": "AI"
   },
   "layers": {
     "title": "レイヤー",
@@ -134,7 +152,7 @@
     "generate": "生成",
     "generating": "生成中...",
     "generateTooltip": "検出されたテキストブロックを翻訳する",
-    "render": "レンダー",
+    "render": "レンダリング",
     "renderTooltip": "翻訳をページにレンダー",
     "apiKeyMissing": "{{provider}} の API キーが必要です。",
     "localModelActive": "ローカルモデルがアクティブです",
@@ -196,7 +214,7 @@
     "fontPlaceholder": "フォントを選択",
     "fontColorLabel": "フォントカラー",
     "fontSizeLabel": "サイズ",
-    "fontScopeGlobal": "全体",
+    "fontScopeGlobal": "グローバル",
     "fontScopeBlock": "ブロックごと",
     "fontScopeBlockIndex": "ブロック {{index}}",
     "fontScopeBlocksCount": "{{count}} ブロック",
@@ -221,8 +239,8 @@
   "workspace": {
     "importPrompt": "ページを読み込んで編集を開始してください。",
     "deleteBlock": "ブロックを削除",
-    "dropImagesTitle": "Drop images to add pages",
-    "dropImagesHint": "PNG, JPG, or WebP"
+    "dropImagesTitle": "画像をドロップしてページを追加",
+    "dropImagesHint": "PNG、JPG、WebP"
   },
   "statusBar": {
     "zoom": "ズーム",
@@ -303,7 +321,7 @@
     "aboutRepository": "リポジトリ",
     "device": "デバイス",
     "deviceDescription": "ハードウェアアクセラレーション情報",
-    "deviceMl": "ML 演算",
+    "deviceMl": "ML コンピュート",
     "apiKeys": "API キー",
     "apiKeysDescription": "異なるプロバイダーの API キーを管理します。キーはデバイスのキーチェーンに安全に保存され、他人と共有されることはありません。",
     "freeTier": "無料プラン",
@@ -316,12 +334,12 @@
     "localLlmPresetPreset1": "プリセット 1",
     "localLlmPresetPreset2": "プリセット 2",
     "localLlmPresetCustom": "カスタム",
-    "localLlmBaseUrl": "Base URL",
+    "localLlmBaseUrl": "ベース URL",
     "localLlmApiKey": "API キー（任意）",
     "localLlmModelName": "モデル名",
     "localLlmModelNamePlaceholder": "例: qwen2.5:7b, llama3.2:3b",
     "localLlmTargetLanguage": "翻訳先言語",
-    "localLlmTemperature": "Temperature",
+    "localLlmTemperature": "温度",
     "localLlmTemperaturePlaceholder": "0.1（デフォルト）",
     "localLlmMaxTokens": "最大トークン数",
     "localLlmMaxTokensPlaceholder": "1000（デフォルト）",
@@ -364,12 +382,12 @@
     "engines": "エンジン",
     "enginesDescription": "各パイプライン段階で使用するMLエンジンを選択します。",
     "detector": "検出器",
-    "fontDetector": "Font Detector",
+    "fontDetector": "フォント検出器",
     "segmenter": "セグメンター",
     "bubbleSegmenter": "吹き出しセグメンター",
     "ocr": "OCR",
     "translator": "翻訳器",
-    "inpainter": "インペインター",
+    "inpainter": "インペインタ",
     "renderer": "レンダラー",
     "keybinds": "キーバインド",
     "keybindsDescription": "ツールやアクションのショートカットキーをカスタマイズします。",
@@ -380,15 +398,19 @@
     "shortcutResetDescription": "すべてのショートカットをデフォルト値に戻します。保存された変更は失われます。",
     "shortcutConflict": "そのキーの組み合わせは既に使用されています",
     "shortcutInvalid": "このキーはショートカットとして使用できません",
-    "experimental": "Experimental",
-    "experimentalDescription": "Experimental features that may change or break. Use with caution.",
-    "experimentalWarningTitle": "⚠ Experimental Features",
-    "experimentalWarningBody": "These features are experimental and may be unstable. They may change, break, or be removed in future updates.",
-    "experimentalContextLabel": "Previous page translation context",
-    "experimentalContextDescription": "Include previous page translations as context when translating the current page. This can improve consistency across pages.",
-    "experimentalContextOff": "Off",
-    "experimentalContext1Page": "1 previous page",
-    "experimentalContextAll": "All previous pages"
+    "experimental": "実験的機能",
+    "experimentalDescription": "実験的機能は変更されたり壊れたりする可能性があります。注意して使用してください。",
+    "experimentalWarningTitle": "⚠ 実験的機能",
+    "experimentalWarningBody": "これらの機能は実験的であり、不安定な可能性があります。将来のアップデートで変更、破損、または削除される可能性があります。",
+    "experimentalContextLabel": "前ページ翻訳コンテキスト",
+    "experimentalContextDescription": "現在のページを翻訳する際に、前のページの翻訳をコンテキストとして含めます。ページ間の一貫性が向上します。",
+    "experimentalContextOff": "オフ",
+    "experimentalContext1Page": "前 1 ページ",
+    "experimentalContextAll": "すべての前ページ",
+    "codex": "Codex",
+    "codexDescription": "ChatGPT Codex アカウントでサインインして画像生成を行います。",
+    "ai": "AI",
+    "codexTwoFactorDescription": "サインインする前に、ChatGPT アカウントで二要素認証を有効にしてください。Codex デバイスコードログインは 2FA が必要です。"
   },
   "updater": {
     "available": {
@@ -408,5 +430,21 @@
     },
     "close": "閉じる",
     "retry": "再試行"
+  },
+  "ai": {
+    "openBrowser": "ブラウザを開く",
+    "signInTitle": "Codex にサインイン",
+    "noPage": "先にページを選択してください。",
+    "signInPending": "認証待ち",
+    "signedIn": "サインイン済み",
+    "userCode": "コード",
+    "signInComplete": "サインイン済み",
+    "signIn": "サインイン",
+    "signedOut": "サインアウト済み",
+    "signOut": "サインアウト",
+    "signInFailed": "サインイン失敗",
+    "prompt": "プロンプト",
+    "generate": "画像を生成",
+    "model": "モデル"
   }
 }
