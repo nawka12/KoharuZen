@@ -4,6 +4,12 @@ on:
   push:
     tags:
       - '*'
+  workflow_dispatch:
+    inputs:
+      tagName:
+        description: 'Tag name for the release'
+        required: true
+        default: '0.58.0-zen'
 
 permissions:
   contents: write
@@ -132,8 +138,8 @@ jobs:
           releaseName: ${{ github.ref_name }}
           releaseBody: ${{ steps.release_notes.outputs.release_body }}
           releaseDraft: false
-          prerelease: ${{ secrets.BUILD_CERTIFICATE_BASE64 == '' && secrets.TAURI_SIGNING_PRIVATE_KEY == '' }}
+          prerelease: false
           args: ${{ matrix.args }}
-          uploadUpdaterJson: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY != '' }}
-          uploadUpdaterSignatures: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY != '' }}
+          uploadUpdaterJson: true
+          uploadUpdaterSignatures: true
           uploadPlainBinary: true
