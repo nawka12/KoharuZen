@@ -134,7 +134,7 @@ impl ProjectSession {
             Op::RemoveNode { page, id, .. } => scene.node(*page, *id).and_then(|node| {
                 if let NodeKind::Text(td) = &node.kind {
                     (!td.text.as_deref().is_some_and(|t| t.trim().is_empty()))
-                        .then(|| (*page, node.transform))
+                        .then_some((*page, node.transform))
                 } else {
                     None
                 }
@@ -308,10 +308,9 @@ fn restore_text_region(
     if let Some(node) = scene
         .page_mut(page)
         .and_then(|p| p.nodes.get_mut(&inpainted_id))
+        && let NodeKind::Image(img) = &mut node.kind
     {
-        if let NodeKind::Image(img) = &mut node.kind {
-            img.blob = new_blob;
-        }
+        img.blob = new_blob;
     }
 
     Ok(())

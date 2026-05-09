@@ -26,11 +26,12 @@ fn build_context(ctx: &EngineCtx<'_>) -> Option<String> {
     for prev_idx in start..ctx.page_index {
         let prev_page_id = ctx.page_order[prev_idx];
         let mut lines: Vec<String> = Vec::new();
-        for (_, _, text_data) in text_nodes(ctx.scene, prev_page_id.clone()) {
-            if let (Some(src), Some(trans)) = (&text_data.text, &text_data.translation) {
-                if !src.trim().is_empty() && !trans.trim().is_empty() {
-                    lines.push(format!("({}) {} -> {}", prev_idx + 1, src, trans));
-                }
+        for (_, _, text_data) in text_nodes(ctx.scene, prev_page_id) {
+            if let (Some(src), Some(trans)) = (&text_data.text, &text_data.translation)
+                && !src.trim().is_empty()
+                && !trans.trim().is_empty()
+            {
+                lines.push(format!("({}) {} -> {}", prev_idx + 1, src, trans));
             }
         }
         if !lines.is_empty() {
