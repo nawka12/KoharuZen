@@ -103,6 +103,9 @@ jobs:
           APPLE_CERTIFICATE: ${{ secrets.BUILD_CERTIFICATE_BASE64 }}
           APPLE_CERTIFICATE_PASSWORD: ""
           KEYCHAIN_PASSWORD: ${{ secrets.KEYCHAIN_PASSWORD }}
+          APPLE_ID_SECRET: ${{ secrets.APPLE_ID }}
+          APPLE_PASSWORD_SECRET: ${{ secrets.APPLE_PASSWORD }}
+          APPLE_TEAM_SECRET: ${{ secrets.APPLE_TEAM }}
         run: |
           if [ -z "$APPLE_CERTIFICATE" ]; then
             echo "No Apple certificate found — skipping codesign setup"
@@ -116,6 +119,15 @@ jobs:
           security import certificate.p12 -k build.keychain -P "$APPLE_CERTIFICATE_PASSWORD" -T /usr/bin/codesign
           security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k "$KEYCHAIN_PASSWORD" build.keychain
           security find-identity -v -p codesigning build.keychain
+          # Export Apple env vars only when secrets are present, so Tauri CLI
+          # does not see empty APPLE_CERTIFICATE and trigger codesign import.
+          {
+            echo "APPLE_CERTIFICATE=$APPLE_CERTIFICATE"
+            echo "APPLE_CERTIFICATE_PASSWORD=$APPLE_CERTIFICATE_PASSWORD"
+            [ -n "$APPLE_ID_SECRET" ] && echo "APPLE_ID=$APPLE_ID_SECRET"
+            [ -n "$APPLE_PASSWORD_SECRET" ] && echo "APPLE_PASSWORD=$APPLE_PASSWORD_SECRET"
+            [ -n "$APPLE_TEAM_SECRET" ] && echo "APPLE_TEAM_ID=$APPLE_TEAM_SECRET"
+          } >> "$GITHUB_ENV"
 
       - name: Verify Certificate
         if: matrix.platform == 'macos-latest'
@@ -132,11 +144,11 @@ jobs:
       - uses: tauri-apps/tauri-action@v0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          APPLE_ID: ${{ secrets.APPLE_ID }}
-          APPLE_PASSWORD: ${{ secrets.APPLE_PASSWORD }}
-          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM }}
-          APPLE_CERTIFICATE: ${{ secrets.BUILD_CERTIFICATE_BASE64 }}
-          APPLE_CERTIFICATE_PASSWORD: ""
+          # Apple signing env vars (APPLE_ID/APPLE_PASSWORD/APPLE_TEAM_ID/
+          # APPLE_CERTIFICATE/APPLE_CERTIFICATE_PASSWORD) are exported via
+          # $GITHUB_ENV in the keychain-import step only when the cert secret
+          # is present — keeps forks from passing empty values that trigger
+          # Tauri CLI's codesign path.
           APPLE_SIGNING_IDENTITY: ${{ env.CERT_ID }}
           AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
           AZURE_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}

@@ -14,6 +14,7 @@ env:
 jobs:
   crates-io:
     name: crates.io
+    if: github.repository == 'mayocream/koharu'
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v6
