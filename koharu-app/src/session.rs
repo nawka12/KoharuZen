@@ -258,26 +258,24 @@ fn restore_text_region(
         return Ok(());
     };
 
-    let source = page_ref
-        .nodes
-        .iter()
-        .find_map(|(_, n)| match &n.kind {
-            NodeKind::Image(img) if img.role == ImageRole::Source => {
-                Some((img.blob.clone(), img.natural_width, img.natural_height))
-            }
-            _ => None,
-        });
+    let source = page_ref.nodes.iter().find_map(|(_, n)| match &n.kind {
+        NodeKind::Image(img) if img.role == ImageRole::Source => {
+            Some((img.blob.clone(), img.natural_width, img.natural_height))
+        }
+        _ => None,
+    });
 
-    let inpainted_id = page_ref
-        .nodes
-        .iter()
-        .find_map(|(id, n)| match &n.kind {
-            NodeKind::Image(img) if img.role == ImageRole::Inpainted => Some(*id),
-            _ => None,
-        });
+    let inpainted_id = page_ref.nodes.iter().find_map(|(id, n)| match &n.kind {
+        NodeKind::Image(img) if img.role == ImageRole::Inpainted => Some(*id),
+        _ => None,
+    });
 
-    let Some((source_blob, w, h)) = source else { return Ok(()) };
-    let Some(inpainted_id) = inpainted_id else { return Ok(()) };
+    let Some((source_blob, w, h)) = source else {
+        return Ok(());
+    };
+    let Some(inpainted_id) = inpainted_id else {
+        return Ok(());
+    };
 
     let x = transform.x.max(0.0) as u32;
     let y = transform.y.max(0.0) as u32;
@@ -307,7 +305,10 @@ fn restore_text_region(
 
     let new_blob = blobs.put_webp(&DynamicImage::ImageRgba8(inpainted))?;
 
-    if let Some(node) = scene.page_mut(page).and_then(|p| p.nodes.get_mut(&inpainted_id)) {
+    if let Some(node) = scene
+        .page_mut(page)
+        .and_then(|p| p.nodes.get_mut(&inpainted_id))
+    {
         if let NodeKind::Image(img) = &mut node.kind {
             img.blob = new_blob;
         }
