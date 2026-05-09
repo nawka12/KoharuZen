@@ -12,6 +12,42 @@ use crate::pipeline::engines::support::text_nodes;
 
 pub struct Model;
 
+fn build_context(ctx: &EngineCtx<'_>) -> Option<String> {
+    let pages = ctx.options.translation_context_pages.unwrap_or(0);
+    if pages == 0 || ctx.page_order.is_empty() || ctx.page_index == 0 {
+        return None;
+    }
+    let start = if pages == u32::MAX {
+        0usize
+    } else {
+        ctx.page_index.saturating_sub(pages as usize)
+    };
+    let mut parts: Vec<String> = Vec::new();
+    for prev_idx in start..ctx.page_index {
+        let prev_page_id = ctx.page_order[prev_idx];
+        let mut lines: Vec<String> = Vec::new();
+        for (_, _, text_data) in text_nodes(ctx.scene, prev_page_id.clone()) {
+            if let (Some(src), Some(trans)) = (&text_data.text, &text_data.translation) {
+                if !src.trim().is_empty() && !trans.trim().is_empty() {
+                    lines.push(format!("({}) {} -> {}", prev_idx + 1, src, trans));
+                }
+            }
+        }
+        if !lines.is_empty() {
+            parts.push(format!(
+                "-- Previous page {} (context, do not translate) --\n{}",
+                prev_idx + 1,
+                lines.join("\n")
+            ));
+        }
+    }
+    if parts.is_empty() {
+        None
+    } else {
+        Some(parts.join("\n\n"))
+    }
+}
+
 #[async_trait]
 impl Engine for Model {
     async fn run(&self, ctx: EngineCtx<'_>) -> Result<Vec<Op>> {
@@ -21,12 +57,14 @@ impl Engine for Model {
         }
 
         let sources: Vec<String> = targets.iter().map(|(_, s)| s.clone()).collect();
+        let context = build_context(&ctx);
         let translations = ctx
             .llm
             .translate_texts(
                 &sources,
                 ctx.options.target_language.as_deref(),
                 ctx.options.system_prompt.as_deref(),
+                context.as_deref(),
             )
             .await?;
 

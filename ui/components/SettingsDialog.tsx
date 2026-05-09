@@ -22,6 +22,7 @@ import {
   LogInIcon,
   LogOutIcon,
   SparklesIcon,
+  FlaskConicalIcon,
 } from 'lucide-react'
 import { useTheme } from 'next-themes'
 import { Fragment, useEffect, useMemo, useRef, useState, type ReactNode } from 'react'
@@ -47,6 +48,7 @@ import { Input } from '@/components/ui/input'
 import { Kbd } from '@/components/ui/kbd'
 import { Label } from '@/components/ui/label'
 import { ScrollArea } from '@/components/ui/scroll-area'
+import { Switch } from '@/components/ui/switch'
 import {
   Select,
   SelectContent,
@@ -54,6 +56,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
+
 import { useUpdater, type UpdaterStatus } from '@/components/Updater'
 import {
   getCatalog as getLlmCatalog,
@@ -140,6 +143,7 @@ const TABS = [
   { id: 'ai', icon: SparklesIcon, labelKey: 'settings.ai' },
   { id: 'keybinds', icon: KeyboardIcon, labelKey: 'settings.keybinds' },
   { id: 'runtime', icon: HardDriveIcon, labelKey: 'settings.runtime' },
+  { id: 'experimental', icon: FlaskConicalIcon, labelKey: 'settings.experimental' },
   { id: 'about', icon: InfoIcon, labelKey: 'settings.about' },
 ] as const
 
@@ -427,6 +431,7 @@ export function SettingsDialog({
                 />
               )}
               {tab === 'keybinds' && <KeybindsPane />}
+              {tab === 'experimental' && <ExperimentalPane />}
               {tab === 'about' && (
                 <AboutPane
                   version={appVersion}
@@ -865,6 +870,55 @@ function CodexSettingsPane() {
           </div>
         </DialogContent>
       </Dialog>
+    </Section>
+  )
+}
+
+// ── Experimental ─────────────────────────────────────────────────
+
+function ExperimentalPane() {
+  const { t } = useTranslation()
+  const translationContextPages = usePreferencesStore((s) => s.translationContextPages)
+  const setTranslationContextPages = usePreferencesStore((s) => s.setTranslationContextPages)
+
+  const contextValue = translationContextPages ?? 0
+  const contextOptions = [
+    { value: '0', label: t('settings.experimentalContextOff') },
+    { value: '1', label: t('settings.experimentalContext1Page') },
+    { value: '-1', label: t('settings.experimentalContextAll') },
+  ]
+
+  return (
+    <Section title={t('settings.experimental')} description={t('settings.experimentalDescription')}>
+      <div className='rounded-md border border-amber-200/70 bg-amber-50/80 p-3 text-xs leading-relaxed text-amber-900 dark:border-amber-900/70 dark:bg-amber-950/40 dark:text-amber-100'>
+        <p className='font-medium'>{t('settings.experimentalWarningTitle')}</p>
+        <p className='mt-1'>{t('settings.experimentalWarningBody')}</p>
+      </div>
+
+      <div className='space-y-1.5'>
+        <Label className='text-xs'>{t('settings.experimentalContextLabel')}</Label>
+        <Select
+          value={String(contextValue)}
+          onValueChange={(v) => {
+            const num = Number(v)
+            setTranslationContextPages(num === 0 ? undefined : num)
+          }}
+        >
+          <SelectTrigger className='w-full'>
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            {contextOptions.map((opt) => (
+              <SelectItem key={opt.value} value={opt.value}>
+                {opt.label}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+        <p className='text-xs leading-relaxed text-muted-foreground'>
+          {t('settings.experimentalContextDescription')}
+        </p>
+      </div>
     </Section>
   )
 }

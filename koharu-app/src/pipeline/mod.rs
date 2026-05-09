@@ -209,6 +209,8 @@ pub async fn run(
                 options: &spec.options,
                 llm: &llm,
                 renderer: &renderer,
+                page_order: &pages,
+                page_index,
             };
             let step_result = async { engine.run(ctx).await }
                 .instrument(tracing::info_span!("step", engine = info.id, page = %page_id))

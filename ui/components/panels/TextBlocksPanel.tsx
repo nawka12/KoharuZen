@@ -73,6 +73,7 @@ export function TextBlocksPanel() {
     const renderer = cfg.pipeline?.renderer || 'koharu-renderer'
     const editor = useEditorUiStore.getState()
     const prefs = usePreferencesStore.getState()
+    const ctxPages = prefs.translationContextPages
     // Keep rendering page-scoped, but constrain translation to the clicked block.
     await startPipeline({
       steps: [translator, renderer],
@@ -81,6 +82,12 @@ export function TextBlocksPanel() {
       targetLanguage: editor.selectedLanguage,
       systemPrompt: prefs.customSystemPrompt,
       defaultFont: prefs.defaultFont,
+      translationContextPages:
+        ctxPages !== undefined && ctxPages > 0
+          ? ctxPages === -1
+            ? 4294967295
+            : ctxPages
+          : undefined,
     })
   }
 

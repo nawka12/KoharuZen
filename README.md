@@ -1,6 +1,11 @@
-<h1 align="center">Koharu</h1>
+<h1 align="center">KoharuZen</h1>
 
-<p align="center">ML-powered manga translator, written in <b>Rust</b>.</p>
+<p align="center">QoL fork of <b>Koharu</b> — ML-powered manga translator, written in <b>Rust</b>.</p>
+
+> [!WARNING]
+> **KoharuZen** is a community fork of [Koharu](https://github.com/mayocream/koharu) with quality-of-life improvements.
+> All modifications in this fork are **AI-generated** and are intentionally **not submitted as pull requests** to the upstream repository.
+> For the original project, bug reports, and official support, please refer to the [upstream repository](https://github.com/mayocream/koharu).
 
 <p align="center">
 <img alt="GitHub Downloads (all assets, all releases)" src="https://img.shields.io/github/downloads/mayocream/koharu/total?style=for-the-badge&link=https%3A%2F%2Fgithub.com%2Fmayocream%2Fkoharu%2Freleases%2Flatest">

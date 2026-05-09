@@ -2,7 +2,7 @@
 
 import * as ScrollAreaPrimitive from '@radix-ui/react-scroll-area'
 import { useGesture } from '@use-gesture/react'
-import { useCallback, useEffect, useMemo, useRef } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import type React from 'react'
 import { useTranslation } from 'react-i18next'
 
@@ -39,7 +39,8 @@ import { usePointerToDocument } from '@/hooks/usePointerToDocument'
 import { useRenderBrushDrawing } from '@/hooks/useRenderBrushDrawing'
 import { useScene } from '@/hooks/useScene'
 import type { Node, Transform } from '@/lib/api/schemas'
-import { applyOp } from '@/lib/io/scene'
+import { isTauri } from '@/lib/backend'
+import { applyOp, uploadPages, uploadPagesByPaths } from '@/lib/io/scene'
 import { ops } from '@/lib/ops'
 import { useEditorUiStore } from '@/lib/stores/editorUiStore'
 import { useSelectionStore } from '@/lib/stores/selectionStore'
@@ -212,6 +213,66 @@ export function Workspace() {
     })
   const { t } = useTranslation()
 
+  // Drag-and-drop image import ------------------------------------------------
+
+  const [isDragOver, setIsDragOver] = useState(false)
+
+  // Tauri: native drag-drop gives file paths; avoids buffering in JS.
+  useEffect(() => {
+    if (!isTauri()) return
+    let unlisten: (() => void) | undefined
+    const setup = async () => {
+      const { getCurrentWebviewWindow } = await import('@tauri-apps/api/webviewWindow')
+      unlisten = await getCurrentWebviewWindow().onDragDropEvent((event) => {
+        const { type } = event.payload
+        if (type === 'enter' || type === 'over') {
+          setIsDragOver(true)
+        } else if (type === 'leave') {
+          setIsDragOver(false)
+        } else if (type === 'drop') {
+          setIsDragOver(false)
+          const IMAGE_RE = /\.(png|jpe?g|webp)$/i
+          const paths = event.payload.paths.filter((p) => IMAGE_RE.test(p))
+          if (paths.length > 0) {
+            void uploadPagesByPaths(paths, false)
+          }
+        }
+      })
+    }
+    setup()
+    return () => {
+      unlisten?.()
+    }
+  }, [])
+
+  // Web: standard HTML5 drag-drop.
+  const handleDragOver = useCallback((e: React.DragEvent) => {
+    if (isTauri()) return
+    e.preventDefault()
+    e.dataTransfer.dropEffect = 'copy'
+  }, [])
+  const handleDragEnter = useCallback((e: React.DragEvent) => {
+    if (isTauri()) return
+    e.preventDefault()
+    setIsDragOver(true)
+  }, [])
+  const handleDragLeave = useCallback((e: React.DragEvent) => {
+    if (isTauri()) return
+    if (e.currentTarget === e.target || !e.currentTarget.contains(e.relatedTarget as unknown as globalThis.Node)) {
+      setIsDragOver(false)
+    }
+  }, [])
+  const handleDrop = useCallback((e: React.DragEvent) => {
+    if (isTauri()) return
+    e.preventDefault()
+    setIsDragOver(false)
+    const IMAGE_RE = /\.(png|jpe?g|webp)$/i
+    const files = Array.from(e.dataTransfer.files).filter((f) => IMAGE_RE.test(f.name))
+    if (files.length > 0) {
+      void uploadPages(files, false)
+    }
+  }, [])
+
   useGesture(
     {
       onDrag: ({ first, movement: [mx, my], memo, cancel, ctrlKey }) => {
@@ -287,7 +348,23 @@ export function Workspace() {
   )
 
   return (
-    <div className='relative flex min-h-0 min-w-0 flex-1 bg-muted'>
+    <div
+      className='relative flex min-h-0 min-w-0 flex-1 bg-muted'
+      onDragOver={handleDragOver}
+      onDragEnter={handleDragEnter}
+      onDragLeave={handleDragLeave}
+      onDrop={handleDrop}
+    >
+      {isDragOver && (
+        <div className='absolute inset-0 z-50 flex items-center justify-center bg-black/30'>
+          <div className='rounded-lg bg-background p-6 text-center shadow-lg'>
+            <p className='text-lg font-medium'>{t('workspace.dropImagesTitle')}</p>
+            <p className='mt-1 text-sm text-muted-foreground'>
+              {t('workspace.dropImagesHint')}
+            </p>
+          </div>
+        </div>
+      )}
       <ToolRail />
       <SubToolRail />
       <div className='relative flex min-h-0 min-w-0 flex-1 flex-col'>

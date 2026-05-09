@@ -48,6 +48,10 @@ pub struct StartPipelineRequest {
     pub system_prompt: Option<String>,
     #[serde(default)]
     pub default_font: Option<String>,
+    /// Number of previous pages to include as translation context.
+    /// 0 = off, 1 = previous page only, u32::MAX = all previous pages.
+    #[serde(default)]
+    pub translation_context_pages: Option<u32>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, utoipa::ToSchema)]
@@ -85,6 +89,7 @@ async fn start_pipeline(
             default_font: req.default_font,
             text_node_ids: req.text_node_ids,
             region: req.region,
+            translation_context_pages: req.translation_context_pages,
         },
     };
 

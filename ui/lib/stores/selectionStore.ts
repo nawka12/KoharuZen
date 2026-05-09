@@ -5,6 +5,9 @@ import { create } from 'zustand'
 /**
  * Page + node selection. Multi-select via `nodeIds: Set<string>`; the Navigator
  * and hotkeys read `pageId`; component interactions read `nodeIds`.
+ *
+ * Multi-page selection via `selectedPageIds: Set<string>` allows the Navigator
+ * to select multiple pages for batch operations (process, delete, export).
  */
 type SelectionState = {
   pageId: string | null
@@ -16,6 +19,15 @@ type SelectionState = {
   deselect: (id: string) => void
   clear: () => void
   isSelected: (id: string) => boolean
+
+  // Multi-page selection
+  selectedPageIds: Set<string>
+  setSelectedPages: (ids: string[]) => void
+  togglePageSelection: (id: string) => void
+  clearPageSelection: () => void
+  isPageSelected: (id: string) => boolean
+  hasMultiPageSelection: () => boolean
+  extendPageSelection: (id: string, anchor: string, allIds: string[]) => void
 }
 
 export const useSelectionStore = create<SelectionState>((set, get) => ({
@@ -53,4 +65,38 @@ export const useSelectionStore = create<SelectionState>((set, get) => ({
   clear: () => set({ nodeIds: new Set() }),
 
   isSelected: (id) => get().nodeIds.has(id),
+
+  // Multi-page selection
+  selectedPageIds: new Set(),
+
+  setSelectedPages: (ids) => set({ selectedPageIds: new Set(ids) }),
+
+  togglePageSelection: (id) =>
+    set((state) => {
+      const next = new Set(state.selectedPageIds)
+      if (next.has(id)) next.delete(id)
+      else next.add(id)
+      return { selectedPageIds: next }
+    }),
+
+  clearPageSelection: () => set({ selectedPageIds: new Set() }),
+
+  isPageSelected: (id) => get().selectedPageIds.has(id),
+
+  hasMultiPageSelection: () => get().selectedPageIds.size > 1,
+
+  extendPageSelection: (id, anchor, allIds) =>
+    set((state) => {
+      const anchorIdx = allIds.indexOf(anchor)
+      const clickIdx = allIds.indexOf(id)
+      if (anchorIdx === -1 || clickIdx === -1) {
+        const next = new Set(state.selectedPageIds)
+        next.add(id)
+        return { selectedPageIds: next }
+      }
+      const start = Math.min(anchorIdx, clickIdx)
+      const end = Math.max(anchorIdx, clickIdx)
+      const next = new Set(allIds.slice(start, end + 1))
+      return { selectedPageIds: next }
+    }),
 }))

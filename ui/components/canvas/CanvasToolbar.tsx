@@ -123,12 +123,19 @@ function WorkflowButtons() {
     if (steps.length === 0) return
     const editor = useEditorUiStore.getState()
     const prefs = usePreferencesStore.getState()
+    const ctxPages = prefs.translationContextPages
     await startPipeline({
       steps,
       pages: [pageId],
       targetLanguage: editor.selectedLanguage,
       systemPrompt: prefs.customSystemPrompt,
       defaultFont: prefs.defaultFont,
+      translationContextPages:
+        ctxPages !== undefined && ctxPages > 0
+          ? ctxPages === -1
+            ? 4294967295
+            : ctxPages
+          : undefined,
     })
   }
 

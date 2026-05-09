@@ -52,7 +52,8 @@
       "tr-TR": "Türkçe",
       "ko-KR": "한국어",
       "pt-BR": "Português brasileiro"
-    }
+    },
+    "processSelected": "Process {{count}} pages"
   },
   "welcome": {
     "title": "Koharu",
@@ -93,7 +94,12 @@
     "pageManager": {
       "title": "Page Manager",
       "description": "Drag and drop pages to reorder them."
-    }
+    },
+    "processPage": "Process page",
+    "processSelected": "Process {{count}} pages",
+    "deletePage": "Delete page",
+    "deleteSelected": "Delete {{count}} pages",
+    "nSelected": "{{count}} selected"
   },
   "panels": {
     "processing": "Processing",
@@ -247,7 +253,9 @@
   },
   "workspace": {
     "importPrompt": "Import a page to begin editing.",
-    "deleteBlock": "Delete block"
+    "deleteBlock": "Delete block",
+    "dropImagesTitle": "Drop images to add pages",
+    "dropImagesHint": "PNG, JPG, or WebP"
   },
   "statusBar": {
     "zoom": "Zoom",
@@ -408,7 +416,16 @@
     "shortcutReset": "Reset Keybinds",
     "shortcutResetDescription": "This will restore all shortcuts to their default values. Your saved changes will be lost.",
     "shortcutConflict": "Key combination already in use",
-    "shortcutInvalid": "This key cannot be used as a shortcut"
+    "shortcutInvalid": "This key cannot be used as a shortcut",
+    "experimental": "Experimental",
+    "experimentalDescription": "Experimental features that may change or break. Use with caution.",
+    "experimentalWarningTitle": "⚠ Experimental Features",
+    "experimentalWarningBody": "These features are experimental and may be unstable. They may change, break, or be removed in future updates.",
+    "experimentalContextLabel": "Previous page translation context",
+    "experimentalContextDescription": "Include previous page translations as context when translating the current page. This can improve consistency across pages.",
+    "experimentalContextOff": "Off",
+    "experimentalContext1Page": "1 previous page",
+    "experimentalContextAll": "All previous pages"
   },
   "updater": {
     "available": {

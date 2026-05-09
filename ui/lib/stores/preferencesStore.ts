@@ -19,6 +19,8 @@ type PreferencesState = {
   setCodexImagePrompt: (prompt?: string) => void
   codexImageModel?: string
   setCodexImageModel: (model?: string) => void
+  translationContextPages?: number
+  setTranslationContextPages: (pages?: number) => void
   shortcuts: {
     select: string
     block: string
@@ -71,6 +73,7 @@ export const usePreferencesStore = create<PreferencesState>()(
       setCustomSystemPrompt: (prompt) => set({ customSystemPrompt: prompt }),
       setCodexImagePrompt: (prompt) => set({ codexImagePrompt: prompt }),
       setCodexImageModel: (model) => set({ codexImageModel: model }),
+      setTranslationContextPages: (pages) => set({ translationContextPages: pages }),
       setShortcuts: (shortcuts) =>
         set((state) => ({
           shortcuts: {
@@ -88,7 +91,7 @@ export const usePreferencesStore = create<PreferencesState>()(
     }),
     {
       name: 'koharu-config',
-      version: 6,
+      version: 7,
       migrate: (persisted: any, version: number) => {
         if (version < 2 && persisted) {
           delete persisted.localLlm
@@ -128,6 +131,7 @@ export const usePreferencesStore = create<PreferencesState>()(
         customSystemPrompt: state.customSystemPrompt,
         codexImagePrompt: state.codexImagePrompt,
         codexImageModel: state.codexImageModel,
+        translationContextPages: state.translationContextPages,
         shortcuts: state.shortcuts,
       }),
     },

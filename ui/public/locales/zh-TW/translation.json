@@ -36,7 +36,8 @@
     "github": "GitHub",
     "version": "版本：{{version}}",
     "versionUnknown": "版本：未知",
-    "language": "語言"
+    "language": "語言",
+    "processSelected": "Process {{count}} pages"
   },
   "welcome": {
     "title": "Koharu",
@@ -77,7 +78,12 @@
     "pageManager": {
       "title": "頁面管理",
       "description": "拖放頁面以重新排列順序。"
-    }
+    },
+    "processPage": "Process page",
+    "processSelected": "Process {{count}} pages",
+    "deletePage": "Delete page",
+    "deleteSelected": "Delete {{count}} pages",
+    "nSelected": "{{count}} selected"
   },
   "panels": {
     "processing": "處理",
@@ -214,7 +220,9 @@
   },
   "workspace": {
     "importPrompt": "匯入頁面以開始編輯。",
-    "deleteBlock": "刪除區塊"
+    "deleteBlock": "刪除區塊",
+    "dropImagesTitle": "Drop images to add pages",
+    "dropImagesHint": "PNG, JPG, or WebP"
   },
   "statusBar": {
     "zoom": "縮放",
@@ -371,7 +379,16 @@
     "shortcutReset": "重置快捷鍵",
     "shortcutResetDescription": "這將恢復所有快捷鍵到默認值。您保存的更改將丟失。",
     "shortcutConflict": "按鍵組合已被使用",
-    "shortcutInvalid": "此按鍵不能用作快捷鍵"
+    "shortcutInvalid": "此按鍵不能用作快捷鍵",
+    "experimental": "Experimental",
+    "experimentalDescription": "Experimental features that may change or break. Use with caution.",
+    "experimentalWarningTitle": "⚠ Experimental Features",
+    "experimentalWarningBody": "These features are experimental and may be unstable. They may change, break, or be removed in future updates.",
+    "experimentalContextLabel": "Previous page translation context",
+    "experimentalContextDescription": "Include previous page translations as context when translating the current page. This can improve consistency across pages.",
+    "experimentalContextOff": "Off",
+    "experimentalContext1Page": "1 previous page",
+    "experimentalContextAll": "All previous pages"
   },
   "updater": {
     "available": {

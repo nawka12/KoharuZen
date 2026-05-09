@@ -97,6 +97,7 @@ pub struct StartPipelineInput {
     pub target_language: Option<String>,
     pub system_prompt: Option<String>,
     pub default_font: Option<String>,
+    pub translation_context_pages: Option<u32>,
 }
 
 #[derive(Debug, Clone, Serialize, schemars::JsonSchema)]
@@ -190,6 +191,7 @@ impl KoharuServer {
                 default_font: input.default_font,
                 text_node_ids: input.text_node_ids,
                 region: None,
+                translation_context_pages: input.translation_context_pages,
             },
         };
         let job_id = Uuid::new_v4().to_string();

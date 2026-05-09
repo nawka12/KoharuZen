@@ -89,12 +89,19 @@ export function MenuBar() {
     ].filter((s): s is string => !!s)
     const editor = useEditorUiStore.getState()
     const prefs = usePreferencesStore.getState()
+    const ctxPages = prefs.translationContextPages
     await startPipeline({
       steps,
       pages: opts.pageId ? [opts.pageId] : undefined,
       targetLanguage: editor.selectedLanguage,
       systemPrompt: prefs.customSystemPrompt,
       defaultFont: prefs.defaultFont,
+      translationContextPages:
+        ctxPages !== undefined && ctxPages > 0
+          ? ctxPages === -1
+            ? 4294967295
+            : ctxPages
+          : undefined,
     })
   }
 
@@ -102,6 +109,38 @@ export function MenuBar() {
     const cfg = await getConfig()
     if (!cfg.pipeline?.inpainter) return
     await startPipeline({ steps: [cfg.pipeline.inpainter], pages: [pageId] })
+  }
+
+  const runPipelineForPages = async (pageIds: string[]) => {
+    const cfg = await getConfig()
+    if (!cfg.pipeline) return
+    const p = cfg.pipeline
+    const steps = [
+      p.detector,
+      p.segmenter,
+      p.bubble_segmenter,
+      p.font_detector,
+      p.ocr,
+      p.translator,
+      p.inpainter,
+      p.renderer,
+    ].filter((s): s is string => !!s)
+    const editor = useEditorUiStore.getState()
+    const prefs = usePreferencesStore.getState()
+    const ctxPages = prefs.translationContextPages
+    await startPipeline({
+      steps,
+      pages: pageIds,
+      targetLanguage: editor.selectedLanguage,
+      systemPrompt: prefs.customSystemPrompt,
+      defaultFont: prefs.defaultFont,
+      translationContextPages:
+        ctxPages !== undefined && ctxPages > 0
+          ? ctxPages === -1
+            ? 4294967295
+            : ctxPages
+          : undefined,
+    })
   }
 
   const exportItems: MenuItem[] = [
@@ -131,6 +170,9 @@ export function MenuBar() {
     },
   ]
 
+  const selectedPageIds = useSelectionStore((s) => s.selectedPageIds)
+  const hasMultiSelection = selectedPageIds.size > 0
+
   const menus: MenuSection[] = [
     {
       label: t('menu.view'),
@@ -149,6 +191,16 @@ export function MenuBar() {
           disabled: !hasPage,
           testId: 'menu-process-current',
         },
+        ...(hasMultiSelection
+          ? [
+              {
+                label: t('menu.processSelected', { count: selectedPageIds.size }),
+                onSelect: () => void runPipelineForPages([...selectedPageIds]),
+                disabled: false,
+                testId: 'menu-process-selected',
+              } as MenuItem,
+            ]
+          : []),
         {
           label: t('menu.redoInpaintRender'),
           onSelect: () => void runInpaint(requirePageId()),

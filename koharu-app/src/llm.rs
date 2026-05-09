@@ -201,11 +201,16 @@ impl Model {
     /// `[N]...` block; the response is parsed back into per-block
     /// translations. Output length matches input length (possibly with empty
     /// strings for missing blocks).
+    ///
+    /// `context` is an optional preamble (e.g. previous page translations)
+    /// that is prepended to the prompt for reference. The context should not
+    /// contain `[N]` tagged blocks to avoid confusing the response parser.
     pub async fn translate_texts(
         &self,
         sources: &[String],
         target_language: Option<&str>,
         custom_system_prompt: Option<&str>,
+        context: Option<&str>,
     ) -> Result<Vec<String>> {
         if sources.is_empty() {
             return Ok(Vec::new());
@@ -213,7 +218,12 @@ impl Model {
         let target_language = target_language
             .and_then(Language::parse)
             .unwrap_or(Language::English);
-        let body = format_sources(sources);
+        let body = match context {
+            Some(ctx) if !ctx.trim().is_empty() => {
+                format!("{ctx}\n\n{}", format_sources(sources))
+            }
+            _ => format_sources(sources),
+        };
 
         let mut guard = self.state.write().await;
         let translation = match &mut *guard {

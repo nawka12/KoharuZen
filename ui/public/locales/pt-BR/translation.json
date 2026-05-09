@@ -37,7 +37,8 @@
     "github": "GitHub",
     "version": "Versão: {{version}}",
     "versionUnknown": "Versão: Desconhecida",
-    "language": "Idioma"
+    "language": "Idioma",
+    "processSelected": "Process {{count}} pages"
   },
   "welcome": {
     "title": "Koharu",
@@ -78,7 +79,12 @@
     "pageManager": {
       "title": "Gerenciador de páginas",
       "description": "Arraste e solte as páginas para reordená-las."
-    }
+    },
+    "processPage": "Process page",
+    "processSelected": "Process {{count}} pages",
+    "deletePage": "Delete page",
+    "deleteSelected": "Delete {{count}} pages",
+    "nSelected": "{{count}} selected"
   },
   "panels": {
     "processing": "Processamento",
@@ -215,7 +221,9 @@
   },
   "workspace": {
     "importPrompt": "Importe uma página para começar a editar.",
-    "deleteBlock": "Excluir bloco"
+    "deleteBlock": "Excluir bloco",
+    "dropImagesTitle": "Drop images to add pages",
+    "dropImagesHint": "PNG, JPG, or WebP"
   },
   "statusBar": {
     "zoom": "Zoom",
@@ -372,7 +380,16 @@
     "shortcutReset": "Redefinir Atalhos",
     "shortcutResetDescription": "Isso restaurará todos os atalhos para seus valores padrão. Suas alterações salvas serão perdidas.",
     "shortcutConflict": "Combinação de teclas já em uso",
-    "shortcutInvalid": "Esta tecla não pode ser usada como atalho"
+    "shortcutInvalid": "Esta tecla não pode ser usada como atalho",
+    "experimental": "Experimental",
+    "experimentalDescription": "Experimental features that may change or break. Use with caution.",
+    "experimentalWarningTitle": "⚠ Experimental Features",
+    "experimentalWarningBody": "These features are experimental and may be unstable. They may change, break, or be removed in future updates.",
+    "experimentalContextLabel": "Previous page translation context",
+    "experimentalContextDescription": "Include previous page translations as context when translating the current page. This can improve consistency across pages.",
+    "experimentalContextOff": "Off",
+    "experimentalContext1Page": "1 previous page",
+    "experimentalContextAll": "All previous pages"
   },
   "updater": {
     "available": {

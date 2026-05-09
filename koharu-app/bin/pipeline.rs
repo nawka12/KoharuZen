@@ -228,6 +228,7 @@ async fn run() -> Result<()> {
             default_font: cli.default_font.clone(),
             text_node_ids: None,
             region: None,
+            translation_context_pages: None,
         },
     };
 

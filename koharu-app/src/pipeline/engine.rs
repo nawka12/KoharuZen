@@ -47,6 +47,10 @@ pub struct EngineCtx<'a> {
     pub options: &'a PipelineRunOptions,
     pub llm: &'a llm::Model,
     pub renderer: &'a renderer::Renderer,
+    /// Ordered page list for context-aware engines. Empty if unknown.
+    pub page_order: &'a [PageId],
+    /// Index of the current page within `page_order`.
+    pub page_index: usize,
 }
 
 /// Options threaded through a pipeline run.
@@ -62,6 +66,10 @@ pub struct PipelineRunOptions {
     /// composite onto the existing `Image { Inpainted }` (fallback Source)
     /// and process just that one block. Other engines ignore it.
     pub region: Option<Region>,
+    /// Number of previous pages to include as LLM translation context.
+    /// `0` or `None` = no context, `1` = previous page only,
+    /// `Some(u32::MAX)` = all previous pages.
+    pub translation_context_pages: Option<u32>,
 }
 
 // ---------------------------------------------------------------------------

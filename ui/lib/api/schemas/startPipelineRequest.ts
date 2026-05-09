@@ -27,4 +27,10 @@ export interface StartPipelineRequest {
    * @nullable
    */
   textNodeIds?: NodeId[] | null
+  /**
+   * Number of previous pages to include as translation context.
+   * 0 = off, 1 = previous page only
+   * @nullable
+   */
+  translationContextPages?: number | null
 }

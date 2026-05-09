@@ -22,7 +22,8 @@ use atomicwrites::{AtomicFile, OverwriteBehavior};
 use camino::{Utf8Path, Utf8PathBuf};
 use chrono::Utc;
 use fs4::FileExt;
-use koharu_core::{Scene, op::Op};
+use image::DynamicImage;
+use koharu_core::{ImageRole, NodeKind, Scene, Transform, op::Op};
 use parking_lot::{Mutex, RwLock};
 use serde::{Deserialize, Serialize};
 
@@ -127,7 +128,31 @@ impl ProjectSession {
     pub fn apply(&self, op: Op) -> Result<u64> {
         let mut history = self.history.lock();
         let mut scene = self.scene.write();
-        history.apply(&mut scene, op)
+
+        // Capture text node info before it's removed by the op.
+        let text_restore = match &op {
+            Op::RemoveNode { page, id, .. } => scene.node(*page, *id).and_then(|node| {
+                if let NodeKind::Text(td) = &node.kind {
+                    (!td.text.as_deref().is_some_and(|t| t.trim().is_empty()))
+                        .then(|| (*page, node.transform))
+                } else {
+                    None
+                }
+            }),
+            _ => None,
+        };
+
+        let epoch = history.apply(&mut scene, op)?;
+
+        // Restore the source image region that the deleted text block covered,
+        // so the inpainted background doesn't show a blank patch from a false
+        // OCR detection.
+        if let Some((page, transform)) = text_restore {
+            restore_text_region(&mut scene, &self.blobs, page, transform)
+                .unwrap_or_else(|e| tracing::warn!("restore source region: {e:#}"));
+        }
+
+        Ok(epoch)
     }
 
     pub fn undo(&self) -> Result<Option<(u64, Op)>> {
@@ -218,6 +243,77 @@ struct ProjectTomlFile {
     name: String,
     created_at: chrono::DateTime<chrono::Utc>,
     updated_at: chrono::DateTime<chrono::Utc>,
+}
+
+/// After removing a text node, copy the source image region over the
+/// inpainted image in the area the text block occupied. This restores
+/// the original background for false-positive OCR detections.
+fn restore_text_region(
+    scene: &mut Scene,
+    blobs: &BlobStore,
+    page: koharu_core::PageId,
+    transform: Transform,
+) -> Result<()> {
+    let Some(page_ref) = scene.pages.get(&page) else {
+        return Ok(());
+    };
+
+    let source = page_ref
+        .nodes
+        .iter()
+        .find_map(|(_, n)| match &n.kind {
+            NodeKind::Image(img) if img.role == ImageRole::Source => {
+                Some((img.blob.clone(), img.natural_width, img.natural_height))
+            }
+            _ => None,
+        });
+
+    let inpainted_id = page_ref
+        .nodes
+        .iter()
+        .find_map(|(id, n)| match &n.kind {
+            NodeKind::Image(img) if img.role == ImageRole::Inpainted => Some(*id),
+            _ => None,
+        });
+
+    let Some((source_blob, w, h)) = source else { return Ok(()) };
+    let Some(inpainted_id) = inpainted_id else { return Ok(()) };
+
+    let x = transform.x.max(0.0) as u32;
+    let y = transform.y.max(0.0) as u32;
+    let bw = (transform.width.max(0.0) as u32).min(w.saturating_sub(x));
+    let bh = (transform.height.max(0.0) as u32).min(h.saturating_sub(y));
+
+    if bw == 0 || bh == 0 {
+        return Ok(());
+    }
+
+    let source_img = blobs.load_image(&source_blob)?;
+    let inpainted_img = blobs.load_image(
+        &page_ref
+            .nodes
+            .get(&inpainted_id)
+            .and_then(|n| match &n.kind {
+                NodeKind::Image(img) => Some(&img.blob),
+                _ => None,
+            })
+            .ok_or_else(|| anyhow::anyhow!("inpainted node vanished"))?
+            .clone(),
+    )?;
+
+    let region = source_img.crop_imm(x, y, bw, bh);
+    let mut inpainted = inpainted_img.to_rgba8();
+    image::imageops::overlay(&mut inpainted, &region, x as i64, y as i64);
+
+    let new_blob = blobs.put_webp(&DynamicImage::ImageRgba8(inpainted))?;
+
+    if let Some(node) = scene.page_mut(page).and_then(|p| p.nodes.get_mut(&inpainted_id)) {
+        if let NodeKind::Image(img) = &mut node.kind {
+            img.blob = new_blob;
+        }
+    }
+
+    Ok(())
 }
 
 // ---------------------------------------------------------------------------
