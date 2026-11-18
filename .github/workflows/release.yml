@@ -1,76 +1,102 @@
 name: Release
 
 on:
+  workflow_dispatch:
   push:
     tags:
       - '*'
-  workflow_dispatch:
-    inputs:
-      tagName:
-        description: 'Tag name for the release'
-        required: true
-        default: '0.58.0-zen'
 
 permissions:
+  actions: read
   contents: write
   id-token: write
   packages: write
 
 env:
   CARGO_TERM_COLOR: always
-  REGISTRY: ghcr.io
-  IMAGE_NAME: ${{ github.repository }}
 
 jobs:
   release:
+    if: github.ref_type == 'tag'
     strategy:
       fail-fast: false
       matrix:
         include:
           - platform: 'macos-latest' # for Arm based macs (M1 and above).
             args: '--target aarch64-apple-darwin'
-          - platform: 'ubuntu-latest'
+          # The oldest Ubuntu Koharu supports, since a binary needs the glibc
+          # it was linked against or a newer one.
+          - platform: 'ubuntu-24.04'
+            args: ''
+          - platform: 'ubuntu-24.04-arm'
             args: ''
           - platform: 'windows-latest'
             args: ''
 
     runs-on: ${{ matrix.platform }}
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
         with:
           fetch-depth: 0
           fetch-tags: true
 
       - uses: oven-sh/setup-bun@v2
 
+      - uses: Swatinem/rust-cache@v2
+        with:
+          shared-key: koharu-app-${{ matrix.platform }}
+          # Main-branch builds own the shared dependency cache.
+          save-if: false
+
+      - name: Install macOS CEF helper targets
+        if: startsWith(matrix.platform, 'macos')
+        run: rustup target add aarch64-apple-darwin x86_64-apple-darwin
+
       - name: install dependencies (ubuntu only)
-        if: matrix.platform == 'ubuntu-latest'
+        if: startsWith(matrix.platform, 'ubuntu')
         run: |
-          sudo apt-get update
-          sudo apt-get install -y libwebkit2gtk-4.1-dev libappindicator3-dev librsvg2-dev patchelf
+          sudo apt update
+          sudo apt install --no-install-recommends \
+            libgtk-4-dev \
+            build-essential \
+            llvm \
+            curl \
+            wget \
+            file \
+            libxdo-dev \
+            libssl-dev \
+            libayatana-appindicator3-dev \
+            librsvg2-dev
 
-      - name: Install CUDA Toolkit (ubuntu only)
-        uses: Jimver/cuda-toolkit@master
-        if: matrix.platform == 'ubuntu-latest'
+      - uses: actions/cache@v6
         with:
-          cuda: '13.0.0'
-          log-file-suffix: '${{ matrix.platform }}.txt'
-
-      - name: Install CUDA Toolkit (windows only)
-        uses: Jimver/cuda-toolkit@master
-        if: matrix.platform == 'windows-latest'
-        with:
-          cuda: '13.0.0'
-          method: 'network'
-          sub-packages: '["nvcc", "cudart", "crt", "thrust", "nvvm", "cublas", "cublas_dev", "cufft", "cufft_dev", "curand", "curand_dev", "nvrtc", "nvrtc_dev"]'
-          log-file-suffix: '${{ matrix.platform }}.txt'
-
-      - name: Install MSVC Build Tools
-        uses: ilammy/msvc-dev-cmd@v1
-        if: matrix.platform == 'windows-latest'
+          path: ~/.bun/install/cache
+          key: ${{ matrix.platform }}-bun-${{ hashFiles('**/bun.lock') }}
 
       - name: Install dependencies
         run: bun install
+
+      # Forks have no Sentry project: skip symbol upload when the token is missing.
+      - name: Check Sentry credentials
+        id: sentry
+        shell: bash
+        env:
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+        run: |
+          if [ -n "$SENTRY_AUTH_TOKEN" ]; then
+            echo "enabled=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "No Sentry token found - skipping symbol upload"
+            echo "enabled=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Setup Sentry CLI
+        if: steps.sentry.outputs.enabled == 'true'
+        uses: matbour/setup-sentry-cli@v3
+        with:
+          token: ${{ secrets.SENTRY_AUTH_TOKEN }}
+          organization: ${{ vars.SENTRY_ORG }}
+          project: rust
 
       - name: Generate release changelog
         id: release_notes
@@ -84,92 +110,50 @@ jobs:
             echo 'EOF'
           } >> "$GITHUB_OUTPUT"
 
-      - name: Install trusted-signing-cli (windows only)
-        if: matrix.platform == 'windows-latest'
+      # Export Apple env vars only when secrets are present: Tauri CLI starts a
+      # codesign import on an empty APPLE_CERTIFICATE. Without a certificate, fall
+      # back to ad-hoc signing (users right-click > Open the unsigned app).
+      - name: Configure Apple signing (macOS only)
+        if: startsWith(matrix.platform, 'macos')
         shell: bash
         env:
-          AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
-        run: |
-          if [ -z "$AZURE_CLIENT_ID" ]; then
-            echo "No Azure signing credentials found — skipping trusted-signing-cli install"
-            exit 0
-          fi
-          curl -fsSL "https://github.com/Levminer/trusted-signing-cli/releases/download/0.8.0/trusted-signing-cli.exe" -o "$RUNNER_TEMP/trusted-signing-cli.exe"
-          printf '%s\n' "$RUNNER_TEMP" >> "$GITHUB_PATH"
-          "$RUNNER_TEMP/trusted-signing-cli.exe" --version
-
-      - name: Import Apple Developer Certificate
-        if: matrix.platform == 'macos-latest'
-        env:
-          APPLE_CERTIFICATE: ${{ secrets.BUILD_CERTIFICATE_BASE64 }}
-          APPLE_CERTIFICATE_PASSWORD: ""
-          KEYCHAIN_PASSWORD: ${{ secrets.KEYCHAIN_PASSWORD }}
+          APPLE_CERTIFICATE_SECRET: ${{ secrets.BUILD_CERTIFICATE_BASE64 }}
           APPLE_ID_SECRET: ${{ secrets.APPLE_ID }}
           APPLE_PASSWORD_SECRET: ${{ secrets.APPLE_PASSWORD }}
           APPLE_TEAM_SECRET: ${{ secrets.APPLE_TEAM }}
         run: |
-          if [ -z "$APPLE_CERTIFICATE" ]; then
-            echo "No Apple certificate found — skipping codesign setup"
+          if [ -z "$APPLE_CERTIFICATE_SECRET" ]; then
+            echo "No Apple certificate found - falling back to ad-hoc signing"
+            echo "APPLE_SIGNING_IDENTITY=-" >> "$GITHUB_ENV"
             exit 0
           fi
-          echo $APPLE_CERTIFICATE | base64 --decode > certificate.p12
-          security create-keychain -p "$KEYCHAIN_PASSWORD" build.keychain
-          security default-keychain -s build.keychain
-          security unlock-keychain -p "$KEYCHAIN_PASSWORD" build.keychain
-          security set-keychain-settings -t 3600 -u build.keychain
-          security import certificate.p12 -k build.keychain -P "$APPLE_CERTIFICATE_PASSWORD" -T /usr/bin/codesign
-          security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k "$KEYCHAIN_PASSWORD" build.keychain
-          security find-identity -v -p codesigning build.keychain
-          # Export Apple env vars only when secrets are present, so Tauri CLI
-          # does not see empty APPLE_CERTIFICATE and trigger codesign import.
           {
-            echo "APPLE_CERTIFICATE=$APPLE_CERTIFICATE"
-            echo "APPLE_CERTIFICATE_PASSWORD=$APPLE_CERTIFICATE_PASSWORD"
+            echo "APPLE_CERTIFICATE=$APPLE_CERTIFICATE_SECRET"
+            echo "APPLE_CERTIFICATE_PASSWORD="
             [ -n "$APPLE_ID_SECRET" ] && echo "APPLE_ID=$APPLE_ID_SECRET"
             [ -n "$APPLE_PASSWORD_SECRET" ] && echo "APPLE_PASSWORD=$APPLE_PASSWORD_SECRET"
             [ -n "$APPLE_TEAM_SECRET" ] && echo "APPLE_TEAM_ID=$APPLE_TEAM_SECRET"
           } >> "$GITHUB_ENV"
 
-      - name: Verify Certificate
-        if: matrix.platform == 'macos-latest'
-        run: |
-          if ! security find-identity -v -p codesigning build.keychain 2>/dev/null | grep -q "Developer ID Application"; then
-            # No Developer ID — fall back to ad-hoc signing so the bundle
-            # step still produces a .app/.dmg. Users will need to right-click
-            # > Open (or strip the quarantine xattr) to launch the unsigned app.
-            echo "CERT_ID=-" >> $GITHUB_ENV
-            echo "No Developer ID certificate — falling back to ad-hoc signing."
-            exit 0
-          fi
-          CERT_INFO=$(security find-identity -v -p codesigning build.keychain | grep "Developer ID Application")
-          CERT_ID=$(echo "$CERT_INFO" | awk -F'"' '{print $2}')
-          echo "CERT_ID=$CERT_ID" >> $GITHUB_ENV
-          echo "Certificate imported."
-
-      - uses: tauri-apps/tauri-action@v0
+      - uses: tauri-apps/tauri-action@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          # Apple signing env vars (APPLE_ID/APPLE_PASSWORD/APPLE_TEAM_ID/
-          # APPLE_CERTIFICATE/APPLE_CERTIFICATE_PASSWORD) are exported via
-          # $GITHUB_ENV in the keychain-import step only when the cert secret
-          # is present — keeps forks from passing empty values that trigger
-          # Tauri CLI's codesign path.
-          APPLE_SIGNING_IDENTITY: ${{ env.CERT_ID }}
-          AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
-          AZURE_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
-          AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
           TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
           TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
+          SIGNPATH_API_TOKEN: ${{ secrets.SIGNPATH_API_TOKEN }}
+          SIGNPATH_APPROVER_API_TOKEN: ${{ secrets.SIGNPATH_APPROVER_API_TOKEN }}
+          SIGNPATH_ORGANIZATION_ID: ${{ vars.SIGNPATH_ORGANIZATION_ID }}
+          SIGNPATH_SIGNING_POLICY_SLUG: ${{ vars.SIGNPATH_SIGNING_POLICY_SLUG }}
+          SIGNPATH_ARTIFACT_CONFIGURATION_SLUG: ${{ vars.SIGNPATH_ARTIFACT_CONFIGURATION_SLUG }}
           SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
-          NEXT_PUBLIC_SENTRY_DSN: ${{ secrets.NEXT_PUBLIC_SENTRY_DSN }}
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
         with:
-          tauriScript: npx @tauri-apps/cli
+          tauriScript: cargo tauri
           tagName: ${{ github.ref_name }}
           releaseName: ${{ github.ref_name }}
           releaseBody: ${{ steps.release_notes.outputs.release_body }}
           releaseDraft: false
           prerelease: false
-          args: ${{ matrix.args }}
-          includeUpdaterJson: true
-          uploadPlainBinary: true
+          args: >-
+            ${{ matrix.args }}
+            ${{ steps.sentry.outputs.enabled == 'true' && '--config ''{"build":{"beforeBundleCommand":"bash .github/sentry.sh"}}''' || '' }}
