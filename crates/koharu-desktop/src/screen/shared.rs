@@ -50,6 +50,12 @@ fn mask(@builtin(position) at: vec4<f32>) -> @location(0) vec4<f32> {
 /// it. `Some` holds the value of Chromium's `use-adapter-luid` switch on
 /// Windows, and nothing elsewhere.
 pub fn sharing(gpu: &Gpu) -> Option<Option<String>> {
+    // KoharuZen divergence: on Linux the shared-frame path leaves the window
+    // black (koharu-rs/koharu#1414 on radv; on NVIDIA, Chromium can't make GBM
+    // buffers), so Linux copies frames, as before 0.84.0, until upstream fixes it.
+    if cfg!(target_os = "linux") {
+        return None;
+    }
     let adapter = gpu.adapter.get_info();
     let features = gpu.device.features();
     match adapter.backend {
