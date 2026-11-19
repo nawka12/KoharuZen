@@ -278,6 +278,12 @@
     "actionsFor": "Ações para {{page}}",
     "delete": "Excluir",
     "deleteDescription": "Isso exclui “{{page}}” e suas camadas. Você pode desfazer.",
+    "deleteSelected_one": "Excluir {{count}} página",
+    "deleteSelected_other": "Excluir {{count}} páginas",
+    "deleteSelectedDescription_one": "Isso exclui {{count}} página e suas camadas. Você pode desfazer.",
+    "deleteSelectedDescription_other": "Isso exclui {{count}} páginas e suas camadas. Você pode desfazer.",
+    "deleteSelectedTitle_one": "Excluir {{count}} página?",
+    "deleteSelectedTitle_other": "Excluir {{count}} páginas?",
     "deleteTitle": "Excluir página?",
     "emptyDescription": "Importe arquivos de imagem ou uma pasta para adicionar páginas.",
     "emptyTitle": "Ainda não há páginas",
@@ -295,6 +301,8 @@
       "recognize": "Reconhecer",
       "translate": "Traduzir"
     },
+    "runSelected_one": "{{stage}} em {{count}} página",
+    "runSelected_other": "{{stage}} em {{count}} páginas",
     "selected": "{{count}} selecionadas"
   },
   "outputPicker": {

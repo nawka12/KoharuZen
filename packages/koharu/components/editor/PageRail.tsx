@@ -11,7 +11,7 @@ import {
 } from '@dnd-kit/core'
 import { useQuery } from '@tanstack/react-query'
 import { observeElementRect, useVirtualizer } from '@tanstack/react-virtual'
-import { FilePlus2, FolderOpen, LoaderCircle, MoreHorizontal, Settings } from 'lucide-react'
+import { FilePlus2, FolderOpen, LoaderCircle, MoreHorizontal, Settings, Trash2 } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
@@ -65,9 +65,10 @@ export function PageRail() {
   // A page being dragged, and the place of the page it's over.
   const [dragged, setDragged] = useState<{ page: string; target: number | null } | null>(null)
   const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 4 } }))
-  // The page Delete asks about, kept while its dialog closes so the dialog still names it.
-  const [pageToDelete, setPageToDelete] = useState<{ page: string; number: number } | null>(null)
+  // The pages Delete asks about, kept while its dialog closes so the dialog still names them.
+  const [pageToDelete, setPageToDelete] = useState<{ pages: string[]; number: number } | null>(null)
   const [confirmingDelete, setConfirmingDelete] = useState(false)
+  const deleteCount = pageToDelete?.pages.length ?? 0
   const pageList = useRef<HTMLDivElement>(null)
   const pageVirtualizer = useVirtualizer({
     count: pages.length,
@@ -108,11 +109,18 @@ export function PageRail() {
     }
   }
 
-  const deletePage = (page: string) =>
-    void call(deletePages, [page])
+  /** The pages an action on `page` applies to: the whole selection, in page order, when `page` is
+   * part of a multi-page selection; otherwise `page` alone. */
+  const actionTargets = (page: string) =>
+    selected.length > 1 && selected.includes(page)
+      ? pages.filter((item) => selected.includes(item.id)).map((item) => item.id)
+      : [page]
+
+  const removePages = (ids: string[]) =>
+    void call(deletePages, ids)
       .then(() => {
-        selectPages(selected.filter((selectedPage) => selectedPage !== page))
-        if (active === page) selectLayers([])
+        selectPages(selected.filter((selectedPage) => !ids.includes(selectedPage)))
+        if (active !== null && ids.includes(active)) selectLayers([])
       })
       .catch(() => undefined)
 
@@ -139,13 +147,42 @@ export function PageRail() {
           {/* One selected page behaves exactly like acting on the active
               page, so saying so would be noise. */}
           {selected.length > 1 && (
-            <span
-              role='status'
-              aria-live='polite'
-              className='ml-auto text-[9px] text-muted-foreground tabular-nums'
-            >
-              {t('navigator.selected', { count: selected.length })}
-            </span>
+            <div className='ml-auto flex items-center gap-0.5'>
+              <span
+                role='status'
+                aria-live='polite'
+                className='text-[9px] text-muted-foreground tabular-nums'
+              >
+                {t('navigator.selected', { count: selected.length })}
+              </span>
+              <Tooltip>
+                <TooltipTrigger
+                  render={
+                    <Button
+                      type='button'
+                      variant='ghost'
+                      size='icon-xs'
+                      aria-label={t('navigator.deleteSelected', { count: selected.length })}
+                      className='text-muted-foreground hover:text-destructive'
+                      onClick={() => {
+                        setPageToDelete({
+                          pages: pages
+                            .filter((item) => selected.includes(item.id))
+                            .map((item) => item.id),
+                          number: 0,
+                        })
+                        setConfirmingDelete(true)
+                      }}
+                    />
+                  }
+                >
+                  <Trash2 />
+                </TooltipTrigger>
+                <TooltipContent>
+                  {t('navigator.deleteSelected', { count: selected.length })}
+                </TooltipContent>
+              </Tooltip>
+            </div>
           )}
         </header>
 
@@ -191,6 +228,7 @@ export function PageRail() {
                   const page = pages[virtualRow.index]
                   if (!page) return null
                   const index = virtualRow.index
+                  const targets = actionTargets(page.id)
                   return (
                     <div
                       key={virtualRow.key}
@@ -201,6 +239,7 @@ export function PageRail() {
                       <PageItem
                         page={page}
                         index={index}
+                        count={targets.length}
                         revision={project?.revisions[page.id]}
                         active={active === page.id}
                         selected={selected.includes(page.id)}
@@ -208,12 +247,12 @@ export function PageRail() {
                         target={dragged !== null && dragged.target === index}
                         onSelect={(additive, range) => select(index, additive, range)}
                         onRun={(stage) =>
-                          void call(commands.runPipeline, { pages: [page.id] }, [stage]).catch(
+                          void call(commands.runPipeline, { pages: targets }, [stage]).catch(
                             () => undefined,
                           )
                         }
                         onDelete={() => {
-                          setPageToDelete({ page: page.id, number: index + 1 })
+                          setPageToDelete({ pages: targets, number: index + 1 })
                           setConfirmingDelete(true)
                         }}
                       />
@@ -248,11 +287,17 @@ export function PageRail() {
       <AlertDialog open={confirmingDelete} onOpenChange={setConfirmingDelete}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>{t('navigator.deleteTitle')}</AlertDialogTitle>
+            <AlertDialogTitle>
+              {deleteCount > 1
+                ? t('navigator.deleteSelectedTitle', { count: deleteCount })
+                : t('navigator.deleteTitle')}
+            </AlertDialogTitle>
             <AlertDialogDescription>
-              {t('navigator.deleteDescription', {
-                page: t('navigator.pageNumber', { number: pageToDelete?.number }),
-              })}
+              {deleteCount > 1
+                ? t('navigator.deleteSelectedDescription', { count: deleteCount })
+                : t('navigator.deleteDescription', {
+                    page: t('navigator.pageNumber', { number: pageToDelete?.number }),
+                  })}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
@@ -261,7 +306,7 @@ export function PageRail() {
               variant='destructive'
               onClick={() => {
                 setConfirmingDelete(false)
-                if (pageToDelete !== null) deletePage(pageToDelete.page)
+                if (pageToDelete !== null) removePages(pageToDelete.pages)
               }}
             >
               {t('navigator.delete')}
@@ -331,6 +376,7 @@ function PageImportMenu({
 function PageItem({
   page,
   index,
+  count,
   revision,
   active,
   selected,
@@ -342,6 +388,8 @@ function PageItem({
 }: {
   page: PageSummary
   index: number
+  /** How many pages the menu's actions apply to. */
+  count: number
   /** The project's revision when a change last named this page, so its thumbnail follows its
    * edits. */
   revision: string | undefined
@@ -425,6 +473,7 @@ function PageItem({
                   <PageActions
                     Item={DropdownMenuItem}
                     Separator={DropdownMenuSeparator}
+                    count={count}
                     onRun={onRun}
                     onDelete={onDelete}
                   />
@@ -441,6 +490,7 @@ function PageItem({
         <PageActions
           Item={ContextMenuItem}
           Separator={ContextMenuSeparator}
+          count={count}
           onRun={onRun}
           onDelete={onDelete}
         />
@@ -455,15 +505,17 @@ const pageMenuItem =
   'min-h-7 gap-1 px-1.5 py-0.5 text-[11px] [&_svg:not([class*="size-"])]:size-3.5'
 
 /** A page's actions, as the items of the menu `Item` and `Separator` belong to: each pipeline
- * stage on the page alone, in the pipeline's order, then deleting it. */
+ * stage, in the pipeline's order, then deleting, for `count` pages. */
 function PageActions({
   Item,
   Separator,
+  count,
   onRun,
   onDelete,
 }: {
   Item: typeof DropdownMenuItem | typeof ContextMenuItem
   Separator: typeof DropdownMenuSeparator | typeof ContextMenuSeparator
+  count: number
   onRun: (stage: Stage) => void
   onDelete: () => void
 }) {
@@ -472,12 +524,14 @@ function PageActions({
     <>
       {pipelineStages.map((stage) => (
         <Item key={stage} className={pageMenuItem} onClick={() => onRun(stage)}>
-          {t(`navigator.run.${stage}`)}
+          {count > 1
+            ? t('navigator.runSelected', { count, stage: t(`navigator.run.${stage}`) })
+            : t(`navigator.run.${stage}`)}
         </Item>
       ))}
       <Separator />
       <Item variant='destructive' className={pageMenuItem} onClick={onDelete}>
-        {t('navigator.delete')}
+        {count > 1 ? t('navigator.deleteSelected', { count }) : t('navigator.delete')}
       </Item>
     </>
   )

@@ -278,6 +278,12 @@
     "actionsFor": "Действия для {{page}}",
     "delete": "Удалить",
     "deleteDescription": "«{{page}}» и её слои будут удалены. Это действие можно отменить.",
+    "deleteSelected_one": "Удалить выбранные ({{count}})",
+    "deleteSelected_other": "Удалить выбранные ({{count}})",
+    "deleteSelectedDescription_one": "Будут удалены выбранные страницы ({{count}}) и их слои. Это действие можно отменить.",
+    "deleteSelectedDescription_other": "Будут удалены выбранные страницы ({{count}}) и их слои. Это действие можно отменить.",
+    "deleteSelectedTitle_one": "Удалить выбранные страницы ({{count}})?",
+    "deleteSelectedTitle_other": "Удалить выбранные страницы ({{count}})?",
     "deleteTitle": "Удалить страницу?",
     "emptyDescription": "Импортируйте изображения или папку, чтобы добавить страницы.",
     "emptyTitle": "Страниц пока нет",
@@ -295,6 +301,8 @@
       "recognize": "Распознать",
       "translate": "Перевести"
     },
+    "runSelected_one": "{{stage}}: выбранные ({{count}})",
+    "runSelected_other": "{{stage}}: выбранные ({{count}})",
     "selected": "Выбрано: {{count}}"
   },
   "outputPicker": {

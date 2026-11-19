@@ -278,6 +278,12 @@
     "actionsFor": "{{page}} 个操作",
     "delete": "删除",
     "deleteDescription": "“{{page}}”搭伊个图层会删除。箇个操作好撤销。",
+    "deleteSelected_one": "删除 {{count}} 页",
+    "deleteSelected_other": "删除 {{count}} 页",
+    "deleteSelectedDescription_one": "{{count}} 页搭伊个图层会删除。箇个操作好撤销。",
+    "deleteSelectedDescription_other": "{{count}} 页搭伊个图层会删除。箇个操作好撤销。",
+    "deleteSelectedTitle_one": "要删除 {{count}} 页？",
+    "deleteSelectedTitle_other": "要删除 {{count}} 页？",
     "deleteTitle": "要删除页面？",
     "emptyDescription": "要添加页面，先导入图像文件或者文件夹。",
     "emptyTitle": "还呒没页面",
@@ -295,6 +301,8 @@
       "recognize": "识别",
       "translate": "翻译"
     },
+    "runSelected_one": "{{stage}}：{{count}} 页",
+    "runSelected_other": "{{stage}}：{{count}} 页",
     "selected": "拣中个页面：{{count}} 页"
   },
   "outputPicker": {

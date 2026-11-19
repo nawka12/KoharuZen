@@ -278,6 +278,12 @@
     "actionsFor": "{{page}} için eylemler",
     "delete": "Sil",
     "deleteDescription": "“{{page}}” ve katmanları silinir. Bu işlemi geri alabilirsiniz.",
+    "deleteSelected_one": "{{count}} sayfayı sil",
+    "deleteSelected_other": "{{count}} sayfayı sil",
+    "deleteSelectedDescription_one": "{{count}} sayfa ve katmanları silinir. Bu işlemi geri alabilirsiniz.",
+    "deleteSelectedDescription_other": "{{count}} sayfa ve katmanları silinir. Bu işlemi geri alabilirsiniz.",
+    "deleteSelectedTitle_one": "{{count}} sayfa silinsin mi?",
+    "deleteSelectedTitle_other": "{{count}} sayfa silinsin mi?",
     "deleteTitle": "Sayfa silinsin mi?",
     "emptyDescription": "Sayfa eklemek için görüntü dosyalarını veya bir klasörü içe aktarın.",
     "emptyTitle": "Henüz sayfa yok",
@@ -295,6 +301,8 @@
       "recognize": "Tanı",
       "translate": "Çevir"
     },
+    "runSelected_one": "{{stage}}: {{count}} sayfa",
+    "runSelected_other": "{{stage}}: {{count}} sayfa",
     "selected": "{{count}} seçili"
   },
   "outputPicker": {

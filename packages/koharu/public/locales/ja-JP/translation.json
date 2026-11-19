@@ -278,6 +278,12 @@
     "actionsFor": "{{page}}の操作",
     "delete": "削除",
     "deleteDescription": "「{{page}}」とそのレイヤーを削除します。元に戻せます。",
+    "deleteSelected_one": "{{count}}ページを削除",
+    "deleteSelected_other": "{{count}}ページを削除",
+    "deleteSelectedDescription_one": "{{count}}ページとそのレイヤーを削除します。元に戻せます。",
+    "deleteSelectedDescription_other": "{{count}}ページとそのレイヤーを削除します。元に戻せます。",
+    "deleteSelectedTitle_one": "{{count}}ページを削除しますか？",
+    "deleteSelectedTitle_other": "{{count}}ページを削除しますか？",
     "deleteTitle": "ページを削除しますか？",
     "emptyDescription": "画像ファイルまたはフォルダーを読み込んでページを追加します。",
     "emptyTitle": "ページがまだありません",
@@ -295,6 +301,8 @@
       "recognize": "文字認識",
       "translate": "翻訳"
     },
+    "runSelected_one": "{{stage}}（{{count}}ページ）",
+    "runSelected_other": "{{stage}}（{{count}}ページ）",
     "selected": "{{count}}件選択中"
   },
   "outputPicker": {

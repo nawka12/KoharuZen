@@ -278,6 +278,12 @@
     "actionsFor": "Actions for {{page}}",
     "delete": "Delete",
     "deleteDescription": "This deletes “{{page}}” and its layers. You can undo it.",
+    "deleteSelected_one": "Delete {{count}} page",
+    "deleteSelected_other": "Delete {{count}} pages",
+    "deleteSelectedDescription_one": "This deletes {{count}} page and its layers. You can undo it.",
+    "deleteSelectedDescription_other": "This deletes {{count}} pages and their layers. You can undo it.",
+    "deleteSelectedTitle_one": "Delete {{count}} page?",
+    "deleteSelectedTitle_other": "Delete {{count}} pages?",
     "deleteTitle": "Delete page?",
     "emptyDescription": "Import image files or a folder to add pages.",
     "emptyTitle": "No pages yet",
@@ -295,6 +301,8 @@
       "recognize": "Recognize",
       "translate": "Translate"
     },
+    "runSelected_one": "{{stage}} {{count}} page",
+    "runSelected_other": "{{stage}} {{count}} pages",
     "selected": "{{count}} selected"
   },
   "outputPicker": {

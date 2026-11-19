@@ -278,6 +278,12 @@
     "actionsFor": "Acciones para {{page}}",
     "delete": "Eliminar",
     "deleteDescription": "Esto elimina “{{page}}” y sus capas. Puedes deshacerlo.",
+    "deleteSelected_one": "Eliminar {{count}} página",
+    "deleteSelected_other": "Eliminar {{count}} páginas",
+    "deleteSelectedDescription_one": "Esto elimina {{count}} página y sus capas. Puedes deshacerlo.",
+    "deleteSelectedDescription_other": "Esto elimina {{count}} páginas y sus capas. Puedes deshacerlo.",
+    "deleteSelectedTitle_one": "¿Eliminar {{count}} página?",
+    "deleteSelectedTitle_other": "¿Eliminar {{count}} páginas?",
     "deleteTitle": "¿Eliminar página?",
     "emptyDescription": "Importa archivos de imagen o una carpeta para añadir páginas.",
     "emptyTitle": "Aún no hay páginas",
@@ -295,6 +301,8 @@
       "recognize": "Reconocer",
       "translate": "Traducir"
     },
+    "runSelected_one": "{{stage}} en {{count}} página",
+    "runSelected_other": "{{stage}} en {{count}} páginas",
     "selected": "{{count}} seleccionadas"
   },
   "outputPicker": {

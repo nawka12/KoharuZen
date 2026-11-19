@@ -278,6 +278,12 @@
     "actionsFor": "{{page}} 的操作",
     "delete": "刪除",
     "deleteDescription": "這將刪除「{{page}}」及其圖層。此操作可以復原。",
+    "deleteSelected_one": "刪除 {{count}} 頁",
+    "deleteSelected_other": "刪除 {{count}} 頁",
+    "deleteSelectedDescription_one": "這將刪除 {{count}} 頁及其圖層。此操作可以復原。",
+    "deleteSelectedDescription_other": "這將刪除 {{count}} 頁及其圖層。此操作可以復原。",
+    "deleteSelectedTitle_one": "刪除 {{count}} 頁？",
+    "deleteSelectedTitle_other": "刪除 {{count}} 頁？",
     "deleteTitle": "刪除頁面？",
     "emptyDescription": "匯入影像檔案或資料夾以新增頁面。",
     "emptyTitle": "尚無頁面",
@@ -295,6 +301,8 @@
       "recognize": "辨識",
       "translate": "翻譯"
     },
+    "runSelected_one": "{{stage}}（{{count}} 頁）",
+    "runSelected_other": "{{stage}}（{{count}} 頁）",
     "selected": "已選擇 {{count}}"
   },
   "outputPicker": {

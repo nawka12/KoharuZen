@@ -278,6 +278,12 @@
     "actionsFor": "إجراءات {{page}}",
     "delete": "حذف",
     "deleteDescription": "يؤدي هذا إلى حذف «{{page}}» وطبقاتها. يمكنك التراجع عن ذلك.",
+    "deleteSelected_one": "حذف {{count}} صفحة",
+    "deleteSelected_other": "حذف {{count}} صفحات",
+    "deleteSelectedDescription_one": "سيتم حذف {{count}} صفحة وطبقاتها. يمكنك التراجع عن ذلك.",
+    "deleteSelectedDescription_other": "سيتم حذف {{count}} صفحات وطبقاتها. يمكنك التراجع عن ذلك.",
+    "deleteSelectedTitle_one": "حذف {{count}} صفحة؟",
+    "deleteSelectedTitle_other": "حذف {{count}} صفحات؟",
     "deleteTitle": "حذف الصفحة؟",
     "emptyDescription": "استورد ملفات صور أو مجلدًا لإضافة صفحات.",
     "emptyTitle": "لا توجد صفحات بعد",
@@ -295,6 +301,8 @@
       "recognize": "التعرّف على النص",
       "translate": "ترجمة"
     },
+    "runSelected_one": "{{stage}} على {{count}} صفحة",
+    "runSelected_other": "{{stage}} على {{count}} صفحات",
     "selected": "{{count}} محدّد"
   },
   "outputPicker": {

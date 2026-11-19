@@ -278,6 +278,12 @@
     "actionsFor": "Actions pour {{page}}",
     "delete": "Supprimer",
     "deleteDescription": "Cette action supprime « {{page}} » et ses calques. Vous pouvez l’annuler.",
+    "deleteSelected_one": "Supprimer {{count}} page",
+    "deleteSelected_other": "Supprimer {{count}} pages",
+    "deleteSelectedDescription_one": "Cette action supprime {{count}} page et ses calques. Vous pouvez l’annuler.",
+    "deleteSelectedDescription_other": "Cette action supprime {{count}} pages et leurs calques. Vous pouvez l’annuler.",
+    "deleteSelectedTitle_one": "Supprimer {{count}} page ?",
+    "deleteSelectedTitle_other": "Supprimer {{count}} pages ?",
     "deleteTitle": "Supprimer la page ?",
     "emptyDescription": "Importez des fichiers image ou un dossier pour ajouter des pages.",
     "emptyTitle": "Aucune page pour l’instant",
@@ -295,6 +301,8 @@
       "recognize": "Reconnaître",
       "translate": "Traduire"
     },
+    "runSelected_one": "{{stage}} sur {{count}} page",
+    "runSelected_other": "{{stage}} sur {{count}} pages",
     "selected": "Sélection : {{count}}"
   },
   "outputPicker": {
